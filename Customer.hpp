@@ -5,3 +5,8 @@
 # 1 "/usr/include/stdc-predef.h" 1 3 4
 # 32 "<command-line>" 2
 # 1 "shopper.hpp"
+
+
+class Customer{
+
+};//end Customer class
