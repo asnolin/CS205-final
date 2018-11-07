@@ -25,5 +25,6 @@ int getInLine(){
 }
 
 Customer(){
-  
+  id = idSeed;
+  idSeed++;
 }

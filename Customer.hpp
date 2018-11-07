@@ -7,6 +7,8 @@ class Customer{
     int inStore;
     int inLine;
 
+    static int idSeed = 1;
+
     int getId();
     int getItems();
     int getImp();
