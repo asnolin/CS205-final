@@ -4,24 +4,28 @@ int getId(){
   return id;
 }
 
-int getItems(){
+int getNumItems(){
   return items;
 }
 
-int getImp(){
+int getImpFactor(){
   return imp;
 }
 
-int getOpp(){
+int getOppFactor(){
   return opp;
 }
 
-int getInStore(){
+int getInStoreTime(){
   return inStore;
 }
 
-int getInLine(){
+int getInLineTime(){
   return inLine;
+}
+
+void setInLineTime(int t){
+  inLineTime = t;
 }
 
 double genRandExp(double beta) {
@@ -31,10 +35,18 @@ double genRandExp(double beta) {
   return(x);
 }
 
-Customer(){
+Customer(int arriveTime){
   id = idSeed;
   idSeed++;
 
-  items = genRandExp(meanNumItems)
+  items = genRandExp(meanNumItems);
+  opp = genRandExp(meanOppFactr);
+  imp = genRandExp(meanImpFactr);
 
+  inStore = arriveTime;
+
+}
+
+~Customer(){
+  //TODO
 }

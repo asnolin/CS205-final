@@ -1,23 +1,30 @@
 class Customer{
   public:
     int id;
-    int items;
-    int imp;
-    int opp;
-    int inStore;
-    int inLine;
+    int numItems;
+    int impFactor;
+    int oppFactor;
+    int inStoreTime;
+    int inLineTime;
 
     static int idSeed = 1;
 
     // Mean Number of Items Shoppers will Have, Used in genRandExp
     static int meanNumItems = 0;
 
+    static int meanOppFactor = 0;
+    static int meanImpFactor = 0;
+
     int getId();
-    int getItems();
-    int getImp();
-    int getOpp();
-    int getInStore();
-    int getInLine();
+    int getNumItems();
+
+    int getImpFactor();
+    int getOppFactor();
+
+    int getInStoreTime();
+    int getInLineTime();
+
+    void setInLineTime(int t);
 
     double genRandExp(double beta);
 
