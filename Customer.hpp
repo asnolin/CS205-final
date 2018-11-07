@@ -1,5 +1,5 @@
 class Customer{
-  public:
+  private:
     int id;
     int numItems;
     int impFactor;
@@ -15,6 +15,9 @@ class Customer{
     static int meanOppFactor = 0;
     static int meanImpFactor = 0;
 
+    double genRandExp(double beta);
+
+  public:
     int getId();
     int getNumItems();
 
@@ -25,8 +28,6 @@ class Customer{
     int getInLineTime();
 
     void setInLineTime(int t);
-
-    double genRandExp(double beta);
 
     Customer();
 
