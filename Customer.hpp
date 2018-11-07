@@ -1,3 +1,8 @@
+#include <stdlib.h>
+#include <math.h>
+
+using namespace std;
+
 class Customer{
   private:
     int id;
@@ -7,30 +12,27 @@ class Customer{
     int inStoreTime;
     int inLineTime;
 
-    static int idSeed = 1;
+    static int idSeed;
 
     // Mean Number of Items Shoppers will Have, Used in genRandExp
-    static int meanNumItems = 0;
+    static int meanNumItems;
 
-    static int meanOppFactor = 0;
-    static int meanImpFactor = 0;
+    static int meanOppFactor;
+    static int meanImpFactor;
 
-    double genRandExp(double beta);
+    double genRandExp(double beta) const;
 
   public:
-    int getId();
-    int getNumItems();
+    int getId() const;
+    int getNumItems() const;
 
-    int getImpFactor();
-    int getOppFactor();
+    int getImpFactor() const;
+    int getOppFactor() const;
 
-    int getInStoreTime();
-    int getInLineTime();
+    int getInStoreTime() const;
+    int getInLineTime() const;
 
     void setInLineTime(int t);
 
-    Customer();
-
-    ~Customer();
-
-}
+    Customer(int arriveTime);
+};

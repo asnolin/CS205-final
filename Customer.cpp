@@ -1,52 +1,47 @@
 #include "Customer.hpp"
 
-int getId(){
+int Customer::getId() const{
   return id;
 }
 
-int getNumItems(){
-  return items;
+int Customer::getNumItems() const{
+  return numItems;
 }
 
-int getImpFactor(){
-  return imp;
+int Customer::getImpFactor() const{
+  return impFactor;
 }
 
-int getOppFactor(){
-  return opp;
+int Customer::getOppFactor() const{
+  return oppFactor;
 }
 
-int getInStoreTime(){
-  return inStore;
+int Customer::getInStoreTime() const{
+  return inStoreTime;
 }
 
-int getInLineTime(){
-  return inLine;
+int Customer::getInLineTime() const{
+  return inLineTime;
 }
 
-void setInLineTime(int t){
+void Customer::setInLineTime(int t){
   inLineTime = t;
 }
 
-double genRandExp(double beta) {
+double Customer::genRandExp(double beta) const{
   double u, x;
   u = drand48();
   x = -beta * log(1.0 - u); // this is the natural log
   return(x);
 }
 
-Customer(int arriveTime){
+Customer::Customer(int arriveTime){
   id = idSeed;
   idSeed++;
 
-  items = genRandExp(meanNumItems);
-  opp = genRandExp(meanOppFactr);
-  imp = genRandExp(meanImpFactr);
+  numItems = genRandExp(meanNumItems);
+  oppFactor = genRandExp(meanOppFactor);
+  impFactor = genRandExp(meanImpFactor);
 
-  inStore = arriveTime;
-
-}
-
-~Customer(){
-  //TODO
+  inStoreTime = arriveTime;
 }
