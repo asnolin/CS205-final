@@ -1,5 +1,8 @@
 #include "Customer.hpp"
-#include <iostream>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+
 
 int Customer::getId() const{
   return id;
@@ -36,17 +39,16 @@ double Customer::genRandExp(double beta) const{
   return(x);
 }
 
+int Customer::idSeed = 1;
+
 Customer::Customer(int arriveTime){
   id = idSeed;
   idSeed++;
 
+  srand48((long) time(NULL));
   numItems = genRandExp(meanNumItems);
   oppFactor = genRandExp(meanOppFactor);
   impFactor = genRandExp(meanImpFactor);
 
   inStoreTime = arriveTime;
-}
-
-int main(){
-  cout << "\nHello World\n\n";
 }

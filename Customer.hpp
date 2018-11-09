@@ -1,8 +1,3 @@
-#include <stdlib.h>
-#include <math.h>
-
-using namespace std;
-
 class Customer{
   private:
     int id;
@@ -15,7 +10,7 @@ class Customer{
     static int idSeed;
 
     // Mean Number of Items Shoppers will Have, Used in genRandExp
-    static const int meanNumItems = 1;
+    static const int meanNumItems = 5;
 
     static const int meanOppFactor = 1;
     static const int meanImpFactor = 1;
@@ -36,5 +31,3 @@ class Customer{
 
     Customer(int arriveTime);
 };
-
-int Customer::idSeed = 1;
