@@ -10,29 +10,17 @@ int main()
     Customer Cust4(4);
     Customer Cust5(5);
 
-    std::cout << "\n";
-    std::cout << Cust1.getId();
-    std::cout << "\n";
-    std::cout << Cust2.getId();
-    std::cout << "\n";
-    std::cout << Cust3.getId();
-    std::cout << "\n";
-    std::cout << Cust4.getId();
-    std::cout << "\n";
-    std::cout << Cust5.getId();
-    std::cout << "\n";
+    printf("%d\n",Cust1.getId());
+    printf("%d\n",Cust2.getId());
+    printf("%d\n",Cust3.getId());
+    printf("%d\n",Cust4.getId());
+    printf("%d\n",Cust5.getId());
 
-    std::cout << "\n";
-    std::cout << Cust1.getNumItems();
-    std::cout << "\n";
-    std::cout << Cust2.getNumItems();
-    std::cout << "\n";
-    std::cout << Cust3.getNumItems();
-    std::cout << "\n";
-    std::cout << Cust4.getNumItems();
-    std::cout << "\n";
-    std::cout << Cust5.getNumItems();
-    std::cout << "\n";
+    printf("%d\n",Cust1.getNumItems());
+    printf("%d\n",Cust2.getNumItems());
+    printf("%d\n",Cust3.getNumItems());
+    printf("%d\n",Cust4.getNumItems());
+    printf("%d\n",Cust5.getNumItems());
 
-    std::cout << "\n";
+    printf("\n");
 }
