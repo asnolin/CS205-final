@@ -1,8 +1,6 @@
 #include "Customer.hpp"
 #include <stdlib.h>
 #include <math.h>
-#include <time.h>
-
 
 int Customer::getId() const{
   return id;
@@ -45,7 +43,6 @@ Customer::Customer(int arriveTime){
   id = idSeed;
   idSeed++;
 
-  srand48((long) time(NULL));
   numItems = genRandExp(meanNumItems);
   oppFactor = genRandExp(meanOppFactor);
   impFactor = genRandExp(meanImpFactor);
