@@ -37,10 +37,10 @@ class Store{
 
 		//seeds customer ids
 		int idSeed;
+		int arrivalSeed;
 
 		//eventType is an enum for all types of events
-		enum eventType {CUSTOMER_ARRIVES, CUSTOMER_CHECKOUT_READY, CUSTOMER_CHECKOUT_FINISH,
-				CUSTOMER_CHANGES_LINE, CUSTOMER_ABANDONS_LINE};
+		enum eventType {CUSTOMER_ARRIVES, CUSTOMER_CHECKOUT_READY, CUSTOMER_CHECKOUT_FINISH, CUSTOMER_CHANGES_LINE, CUSTOMER_ABANDONS_LINE};
 
 
 		//TODO
@@ -59,11 +59,12 @@ class Store{
 		//cashiers are a mapping of
 		//private functions
 
-		//makeEvent makes an event struct with the args passed in
-		// inserts event in sorted order in eventQ
-		bool makeEvent(unsigned long int inTime, eventType inType, Customer &inCust);
-
 		void handleEvent(Event E);
+
+		int calcCheckoutTime(int numItems);
+		int calcShoppingTime(int numItems);
+
+		double genRandExp(double beta) const;
 
 		void incTime();
 

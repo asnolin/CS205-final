@@ -8,54 +8,75 @@
 //include Store header file
 #include"Store.hpp"
 
-void Store::handleEvent(Event E){
+void Store::handleEvent(Event E)
+{
 	// eventType t = E.getEventType();
 
-	if(t == CUSTOMER_ARRIVES){
+	if(t == CUSTOMER_ARRIVES)
+	{
 		Customer aCustomer(Time);
-		//TODO readyCheckoutTime = calculate checkout time using aCustomer.getNumItems()
-		//makeEvent(time+readyCheckoutTime, CUSTOMER_CHECKOUT_READY, E.getCustomer);
 
-		//TODO arrivalInterval = find next arrival interval
-		//makeEvent(time+arrivalInterval, CUSTOMER_ARRIVES, NULL)
+		int shopTime = calcCheckoutTime(aCustomer.getNumItems());
+
+		Event newEvent1(Time+shopTime, CUSTOMER_CHECKOUT_READY, E.getCustomer());
+		eventQ.push(newEvent1);
+
+		int arrivalInterval = genRandExp(arrivalSeed);
+
+		Event newEvent2(Time+arrivalInterval, CUSTOMER_ARRIVES, NULL);
+		eventQ.push(newEvent2);
 	}
-	else if(t == CUSTOMER_CHECKOUT_READY){
-		//choose line
-		//calculate three times
-			// finishes checkout
-			// changes line
-			// abandons line
-		//update checkout line variables
-		//makeEvent based on shortest of the times
+	/*
+	else if(t == CUSTOMER_CHECKOUT_READY)
+	{
+		//TODO Choose Line
+		//Calculate 3 Times
+			// Finishes Checkout
+			// Changes Line
+			// Abandons Line
+		//Update Checkout Line Variables
+	  //Create Event Based on Shortest of the Times
 	}
-	else if(t == CUSTOMER_CHECKOUT_FINISH){
-		//int waitTime = E.getCustomer -> getInStoreTime();
+
+	else if(t == CUSTOMER_CHECKOUT_FINISH)
+	{
+		// TODO Calculate Statistics about Customer
 
 	}
-	else if(t == CUSTOMER_CHANGES_LINE){
-		//choose new line
-		//update checkout line variables
+
+	else if(t == CUSTOMER_CHANGES_LINE)
+	{
+		//TODO Choose New Line
+		//TODO Update Checkout Line Variables
 	}
-	else if(t == CUSTOMER_ABANDONS_LINE){
-		//update line statistics
-		//free customer memory
+
+	else if(t == CUSTOMER_ABANDONS_LINE)
+	{
+		//TODO Update Line Statistics
+		//Free Customer Memory
 	}
+	*/
 }
-
-bool Store::makeEvent(unsigned long int inTime, eventType inType, Customer &inCust){
-	bool isMade = false;
-	//TODO must catch bad_alloc
-	Event *newEvent = new Event;
-	newEvent->exe_time = inTime;
-	newEvent->type = inType;
-	newEvent->cust = &inCust;
-	//TODO add newEvent to eventQ and update isMade when it all works
-
-	return isMade;
-}//end makeEvent
 
 void incTime(){
 	Time = Time+1
+}
+
+int Store::calcShoppingTime(int numItems){
+	//TODO
+	return(numItems);
+}
+
+int Store::calcCheckoutTime(int numItems){
+	//TODO
+	return(numItems);
+}
+
+double Store::genRandExp(double beta) const{
+  double u, x;
+  u = drand48();
+  x = -beta * log(1.0 - u); // this is the natural log
+  return(x);
 }
 
 //no-arg Store constructor
@@ -73,5 +94,5 @@ Store::~Store(){
 //TODO
 
 int main(){
-	
+
 }
