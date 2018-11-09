@@ -59,6 +59,11 @@ class Store{
 		//cashiers are a mapping of
 		//private functions
 
+		//makeEvent makes an event struct with the args passed in
+		// inserts event in sorted order in eventQ
+		bool makeEvent(unsigned long int inTime, eventType inType, Customer &inCust);
+
+		void handleEvent(Event E);
 
 	public:
 		//constructor
