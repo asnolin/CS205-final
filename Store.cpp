@@ -21,15 +21,5 @@ Store::~Store(){
 }//end store default destructor
 
 //TODO
-bool Store::makeEvent(unsigned long int inTime, eventType inType, Customer &inCust){
-	bool isMade = false;
-	//TODO must catch bad_alloc
-	Event *newEvent = new Event;
-	newEvent->exe_time = inTime;
-	newEvent->type = inType;
-	newEvent->cust = &inCust;
-	//TODO add newEvent to eventQ and update isMade when it all works
-		
-	return isMade;
-}//end makeEvent
 
+}//end makeEvent
