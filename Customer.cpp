@@ -1,4 +1,5 @@
 #include "Customer.hpp"
+#include <iostream>
 
 int Customer::getId() const{
   return id;
@@ -44,4 +45,8 @@ Customer::Customer(int arriveTime){
   impFactor = genRandExp(meanImpFactor);
 
   inStoreTime = arriveTime;
+}
+
+int main(){
+  cout << "\nHello World\n\n";
 }

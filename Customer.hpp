@@ -15,10 +15,10 @@ class Customer{
     static int idSeed;
 
     // Mean Number of Items Shoppers will Have, Used in genRandExp
-    static int meanNumItems;
+    static const int meanNumItems = 1;
 
-    static int meanOppFactor;
-    static int meanImpFactor;
+    static const int meanOppFactor = 1;
+    static const int meanImpFactor = 1;
 
     double genRandExp(double beta) const;
 
@@ -36,3 +36,5 @@ class Customer{
 
     Customer(int arriveTime);
 };
+
+int Customer::idSeed = 1;
