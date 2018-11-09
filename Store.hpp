@@ -33,7 +33,7 @@ using namespace std;
 class Store{
 	private:
 		//fields
-		unsigned long int time;
+		unsigned long int Time;
 
 		//seeds customer ids
 		int idSeed;
@@ -64,6 +64,8 @@ class Store{
 		bool makeEvent(unsigned long int inTime, eventType inType, Customer &inCust);
 
 		void handleEvent(Event E);
+
+		void incTime();
 
 	public:
 		//constructor

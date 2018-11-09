@@ -12,7 +12,7 @@ void Store::handleEvent(Event E){
 	// eventType t = E.getEventType();
 
 	if(t == CUSTOMER_ARRIVES){
-		Customer aCustomer(time);
+		Customer aCustomer(Time);
 		//TODO readyCheckoutTime = calculate checkout time using aCustomer.getNumItems()
 		//makeEvent(time+readyCheckoutTime, CUSTOMER_CHECKOUT_READY, E.getCustomer);
 
@@ -54,9 +54,13 @@ bool Store::makeEvent(unsigned long int inTime, eventType inType, Customer &inCu
 	return isMade;
 }//end makeEvent
 
+void incTime(){
+	Time = Time+1
+}
+
 //no-arg Store constructor
 Store::Store(){
-	time = 0;
+	Time = 0;
 
 }//end store default constructor
 
@@ -68,4 +72,6 @@ Store::~Store(){
 
 //TODO
 
-}//end makeEvent
+int main(){
+	
+}
