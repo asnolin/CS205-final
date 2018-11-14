@@ -58,6 +58,7 @@ EventQueue<T>::EventQueue(){
 	//TODO
 }//end no-arg constructor
 
+template<class T>
 bool EventQueue<T>::make_event(unsigned long int inT, T*inObj, eventType inType){
 	//TODO
 	//create new EventNode in heap
@@ -74,7 +75,7 @@ unsigned long int EventQueue<T>::get_current_time(){
 }//end get_current_time
 
 template<class T>
-T *EventQueue<T>::pop(){
-	return obj;
+EventNode<T> EventQueue<T>::pop(){
+	return eventQ.pop();
 }//end get_cust()
 

@@ -44,7 +44,7 @@ class EventNode{
 
 		T *get_obj();
 		
-		evetnType get_type();
+		eventType get_type();
 
 };//end EventNode
 
@@ -64,10 +64,10 @@ class EventQueue{
 		bool make_event(unsigned long int inT, T *inObj, eventType inType);
 
 		//pops head from event queue and returns it		
-		EventNode pop();
+		EventNode<T> pop();
 
 		//get time for event queue
 		unsigned long int get_current_time();
 
 
-}//end EventQueue
+};//end EventQueue
