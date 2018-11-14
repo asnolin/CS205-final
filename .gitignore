@@ -1,4 +1,12 @@
+#vim specific files
 *.swp
+
+#executables
 *.out
+
+#object files
 *.o
+
+#xcode specific files
 *.xcodeproj
+

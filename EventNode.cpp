@@ -1,38 +1,80 @@
 /*
- * EventQueue.cpp
+ * EventNode.cpp
+ *
+ * TODO
+ * finish eventQueue
+ * rename file
  *
  */
 
-EventNode::EventNode(){
+#include"EventNode.hpp"
+
+
+//Event Node constructors
+template<class T>
+EventNode<T>::EventNode(){
 	time = 1;
-	cust = NULL;
-	type = NULL;
+	obj = nullptr;
+	type = VOID_EVENT;
 }//end no-arg constructor
 
-EventNode::EventNode(unsigned long int inTime, void &inCust, eventType inType){
+template<class T>
+EventNode<T>::EventNode(unsigned long int inTime, T *inObj, eventType inType){
 	time = inTime;
-	cust = inCust;
+	obj = inObj;
 	type = inType;
 }//end constructor
 
-EventNode::~EventNode(){
-	delete time;
-	delete cust;
-	delete type;
-}//end destructor
 
-EventNode::bool operator<(EventNode rhs) const{
+
+//EventNode overloaded <
+template<class T>
+bool EventNode<T>::operator<(EventNode rhs) const{
 	return time < rhs.time;
 }//end overloaded < op
 
-EventNode::unsigned long int get_time(){
+
+//EventNode getters
+template<class T>
+unsigned long int EventNode<T>::get_time(){
 	return time;
 }//end get_time
 
-EventNode::Customer *get_cust(){
-	return cust;
-}//end get_cust()
+template<class T>
+T *EventNode<T>::get_obj(){
+	return obj;
+}//end get_obj
 
-EventNode::eventType get_type(){
+template<class T>
+eventType EventNode<T>::get_type(){
 	return type;
 }//end get_type
+
+
+//EventQueue constructor
+template<class T>
+EventQueue<T>::EventQueue(){
+	//init eventQ
+	//TODO
+}//end no-arg constructor
+
+bool EventQueue<T>::make_event(unsigned long int inT, T*inObj, eventType inType){
+	//TODO
+	//create new EventNode in heap
+	//add EventNode to eventQ
+	//return true if successful
+}//end make_event
+
+
+
+//EventQueue getters
+template<class T>
+unsigned long int EventQueue<T>::get_current_time(){
+	return currentTime;
+}//end get_current_time
+
+template<class T>
+T *EventQueue<T>::pop(){
+	return obj;
+}//end get_cust()
+
