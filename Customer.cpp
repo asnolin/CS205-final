@@ -26,8 +26,16 @@ int Customer::getInLineTime() const{
   return inLineTime;
 }
 
+int Customer::getAbandonTime() const{
+  return abandonTime;
+}
+
 void Customer::setInLineTime(int t){
   inLineTime = t;
+}
+
+int Customer::setAbandonTime(int t) {
+  abandonTime = impFactor + t;
 }
 
 double Customer::genRandExp(double beta) const{

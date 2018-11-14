@@ -26,18 +26,42 @@ void Store::handleEvent(Event E)
 		Event newEvent2(Time+arrivalInterval, CUSTOMER_ARRIVES, NULL);
 		eventQ.push(newEvent2);
 	}
-	/*
+
 	else if(t == CUSTOMER_CHECKOUT_READY)
 	{
+		Customer *C = E.get_obj();
 		//TODO Choose Line
+
+
+		//Given a Pointer to a Checkout Line (L)...
 		//Calculate 3 Times
 			// Finishes Checkout
 			// Changes Line
 			// Abandons Line
+
+		C->setAbandonTime(Time);
+
+		int CheckoutTime = Line->getWaitTime();
+		int SwitchTime = C->getOppFactor + Time;
+		int AbandonTime = C->getAbandonTime;
+
 		//Update Checkout Line Variables
 	  //Create Event Based on Shortest of the Times
+		if(CheckoutTime<=SwitchTime & CheckoutTime<=AbandonTime)
+		{
+			FinishTime = CheckoutTime //TODO + genCheckoutLength(C->getNumItems)
+			eventQ.make_event(FinishTime, CUSTOMER_CHECKOUT_FINISH, C, L);
+		}
+		if(SwitchTime<CheckoutTime & SwitchTime<=AbandonTime)
+		{
+			eventQ.make_event(SwitchTime, CUSTOMER_CHANGES_LINE, C, L);
+		}
+		if(AbandonTime<SwitchTime & AbandonTime<CheckoutTime)
+		{
+			eventQ.make_event(AbandonTime, CUSTOMER_ABANDONS_LINE, C, L);
+		}
 	}
-
+	/*
 	else if(t == CUSTOMER_CHECKOUT_FINISH)
 	{
 		// TODO Calculate Statistics about Customer
@@ -56,6 +80,10 @@ void Store::handleEvent(Event E)
 		//Free Customer Memory
 	}
 	*/
+}
+
+void addCheckoutLine(CheckoutLine Line){
+	//TODO
 }
 
 void incTime(){

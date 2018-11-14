@@ -56,8 +56,9 @@ class Store{
 		//shopping is the vector where customers will go when they enter the store but are not in line yet
 		vector<Customer> shopping;
 
-		//cashiers are a mapping of
-		//private functions
+		vector<CheckoutLine*> Lines;
+
+		void addCheckoutLine(CheckoutLine Line);
 
 		void handleEvent(Event E);
 

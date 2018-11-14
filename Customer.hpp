@@ -6,6 +6,7 @@ class Customer{
     int oppFactor;
     int inStoreTime;
     int inLineTime;
+    int abandonTime;
 
     static int idSeed;
 
@@ -26,6 +27,9 @@ class Customer{
 
     int getInStoreTime() const;
     int getInLineTime() const;
+
+    int getAbandonTime() const;
+    int setAbandonTime();
 
     void setInLineTime(int t);
 
