@@ -10,10 +10,12 @@
 
 void Store::handleEvent(Event E)
 {
+	//Get Event Type
 	eventType t = E.get_type()
 
 	if(t == CUSTOMER_ARRIVES)
 	{
+		//Create New Customer Object
 		Customer aCustomer(Time);
 
 		int shopTime = calcCheckoutTime(aCustomer.getNumItems());
@@ -23,7 +25,7 @@ void Store::handleEvent(Event E)
 
 		int arrivalInterval = genRandExp(arrivalSeed);
 
-		Event newEvent2(Time+arrivalInterval, CUSTOMER_ARRIVES, NULL);
+		Event newEvent2(Time+arrivalInterval, CUSTOMER_ARRIVES, NULL, NULL);
 		eventQ.push(newEvent2);
 	}
 
@@ -50,7 +52,7 @@ void Store::handleEvent(Event E)
 	  //Create Event Based on Shortest of the Times
 		if(CheckoutTime<=SwitchTime & CheckoutTime<=AbandonTime)
 		{
-			FinishTime = CheckoutTime //TODO + genCheckoutLength(C->getNumItems)
+			FinishTime = CheckoutTime + calcCheckoutTime(C->numItems);
 			eventQ.make_event(FinishTime, CUSTOMER_CHECKOUT_FINISH, C, L);
 		}
 		if(SwitchTime<CheckoutTime & SwitchTime<=AbandonTime)
