@@ -11,6 +11,7 @@ CheckoutLine::CheckoutLine(){
     idSeed++;
     WaitTime = 0;
     NumCustomers = 0;
+    NumItems = 0;
 };
 
 int CheckoutLine::getID() const{
