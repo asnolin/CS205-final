@@ -1,12 +1,15 @@
 /*
- * EventNode.hpp
+ * Event.hpp
  * 
- * EventNode<T> is a template class
+ * EventNode<T> and EventQueue<T> are class templates
+ *
  * for a class T, an EventNode<T> contains a pointer to an object of that class
+ * and EventQueue<T> produces EventNode<T> object for its pop() function
  * 
+ * No need for an Event.cpp because both are class templates
  * TODO
- * finish eventQueue
- * rename file
+ * implement exceptions?
+ * field for line pointer in EventNode
  */
 
 #include<memory>
@@ -28,6 +31,7 @@ class EventNode{
 	private:
 		unsigned long int time; //time that event will occur at
 		T *obj; //pointer to object involved in event
+
 		eventType type; //type of event
 	public:
 		//no-arg constructor
@@ -67,7 +71,7 @@ class EventQueue{
 		EventNode<T> pop();
 
 		//get time for event queue
-		unsigned long int get_current_time();
+		unsigned long int get_current_time() noexcept;
 
 
 };//end EventQueue
@@ -117,28 +121,47 @@ eventType EventNode<T>::get_type(){
 //EventQueue constructor
 template<class T>
 EventQueue<T>::EventQueue(){
-	//init eventQ
-	//TODO
+	//init currentTime
 	currentTime = 0;
+	//TODO
+	//init the eventQ?
 }//end no-arg constructor
 
 template<class T>
 bool EventQueue<T>::make_event(unsigned long int inT, T*inObj, eventType inType){
 	//TODO
-	//create new EventNode in heap
-	//add EventNode to eventQ
-	//return true if successful
+	//check if inT >= currentTime. return false if inT < currentTime
+	if(inT < currentTime){
+		return false;
+	}else{
+		//create new EventNode
+		EventNode<T> node = EventNode<T>::EventNode(inT, *inObj, inType);
+		//add EventNode to eventQ
+		eventQ.push(node);
+		//return true if successful
+		return true;
+	}
 }//end make_event
 
 
 
-//EventQueue getters
+//EventQueue get current time
 template<class T>
-unsigned long int EventQueue<T>::get_current_time(){
+unsigned long int EventQueue<T>::get_current_time() noexcept{
 	return currentTime;
 }//end get_current_time
 
+
+
 template<class T>
-EventNode<T> EventQueue<T>::pop(){
-	return eventQ.pop();
-}//end get_cust()
+EventNode<T> EventQueue<T>::pop() {
+	//TODO
+	if(eventQ.empty()){
+		throw std::runtime_error("empty eventQ");
+	}else{
+		EventNode<T> node = eventQ.top();
+		//update currentTime to the popped event's time
+		currentTime = node.get_time();
+		return node;
+	}
+}//end pop()

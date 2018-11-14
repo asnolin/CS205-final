@@ -6,6 +6,7 @@
 
 #object files
 *.o
+*.gch
 
 #xcode specific files
 *.xcodeproj
