@@ -29,7 +29,7 @@ class Customer{
     int getInLineTime() const;
 
     int getAbandonTime() const;
-    int setAbandonTime();
+    void setAbandonTime(int t);
 
     void setInLineTime(int t);
 

@@ -34,7 +34,7 @@ void Customer::setInLineTime(int t){
   inLineTime = t;
 }
 
-int Customer::setAbandonTime(int t) {
+void Customer::setAbandonTime(int t) {
   abandonTime = impFactor + t;
 }
 

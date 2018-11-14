@@ -82,8 +82,23 @@ void Store::handleEvent(Event E)
 	*/
 }
 
-void addCheckoutLine(CheckoutLine Line){
+void Store::addCheckoutLine(CheckoutLine Line){
 	//TODO
+}
+
+CheckoutLine* Store::chooseLine(){
+	*CheckoutLine currentLine = Lines.front();
+
+	int i;
+	for(i = 0; i < Lines.size(); i++)
+	{
+		if(Lines[i]->getNumItems() < currentLine->getNumItems())
+		{
+			currentLine = Lines[i];
+		}
+	}
+
+	return(currentLine);
 }
 
 void incTime(){
@@ -122,5 +137,5 @@ Store::~Store(){
 //TODO
 
 int main(){
-
+	printf("Hello World");
 }

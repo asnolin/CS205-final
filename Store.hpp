@@ -69,6 +69,8 @@ class Store{
 
 		void incTime();
 
+		CheckoutLine* chooseLine();
+
 	public:
 		//constructor
 		Store();
