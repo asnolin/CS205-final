@@ -6,11 +6,11 @@
  */
 
 //include Store header file
-#include"Store.hpp"
+#include "Store.hpp"
 
 void Store::handleEvent(Event E)
 {
-	// eventType t = E.getEventType();
+	eventType t = E.get_type()
 
 	if(t == CUSTOMER_ARRIVES)
 	{
@@ -30,7 +30,7 @@ void Store::handleEvent(Event E)
 	else if(t == CUSTOMER_CHECKOUT_READY)
 	{
 		Customer *C = E.get_obj();
-		//TODO Choose Line
+		CheckoutLine *L = chooseLine();
 
 
 		//Given a Pointer to a Checkout Line (L)...
@@ -41,11 +41,12 @@ void Store::handleEvent(Event E)
 
 		C->setAbandonTime(Time);
 
-		int CheckoutTime = Line->getWaitTime();
+		int CheckoutTime = L->getWaitTime();
 		int SwitchTime = C->getOppFactor + Time;
 		int AbandonTime = C->getAbandonTime;
 
 		//Update Checkout Line Variables
+
 	  //Create Event Based on Shortest of the Times
 		if(CheckoutTime<=SwitchTime & CheckoutTime<=AbandonTime)
 		{
@@ -60,7 +61,7 @@ void Store::handleEvent(Event E)
 		{
 			eventQ.make_event(AbandonTime, CUSTOMER_ABANDONS_LINE, C, L);
 		}
-	}
+	};
 	/*
 	else if(t == CUSTOMER_CHECKOUT_FINISH)
 	{
@@ -87,7 +88,7 @@ void Store::addCheckoutLine(CheckoutLine Line){
 }
 
 CheckoutLine* Store::chooseLine(){
-	*CheckoutLine currentLine = Lines.front();
+	CheckoutLine *currentLine = Lines.front();
 
 	int i;
 	for(i = 0; i < Lines.size(); i++)
@@ -101,8 +102,8 @@ CheckoutLine* Store::chooseLine(){
 	return(currentLine);
 }
 
-void incTime(){
-	Time = Time+1
+void Store::incTime(){
+	Time = Time+1;
 }
 
 int Store::calcShoppingTime(int numItems){

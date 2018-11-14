@@ -28,6 +28,9 @@
 //class includes
 //defs
 
+#include "Customer.hpp"
+#include "CheckoutLine.h"
+
 using namespace std;
 
 class Store{
