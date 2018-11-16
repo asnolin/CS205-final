@@ -5,7 +5,7 @@
 #ifndef CS205_FINAL_CHECKOUTLINE_H
 #define CS205_FINAL_CHECKOUTLINE_H
 
-using namespace std;
+//using namespace std;
 
 
 class CheckoutLine {

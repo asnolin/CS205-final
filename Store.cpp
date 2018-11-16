@@ -8,6 +8,7 @@
 //include Store header file
 #include "Store.hpp"
 
+/*
 //====================================================================================================
 void Store::handleEvent(Event E)
 {
@@ -143,6 +144,7 @@ void Store::handleEvent(Event E)
 	//==================================================
 }
 //====================================================================================================
+*/
 
 void Store::addCheckoutLine(CheckoutLine Line){
 	//TODO
@@ -161,6 +163,10 @@ CheckoutLine* Store::chooseLine(){
 	}
 
 	return(currentLine);
+}
+
+int Store::getTime() const{
+	return Time;
 }
 
 void Store::incTime(){
@@ -195,9 +201,3 @@ Store::Store(){
 Store::~Store(){
 
 }//end store default destructor
-
-//TODO
-
-int main(){
-	printf("Hello World");
-}

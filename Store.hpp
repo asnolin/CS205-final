@@ -54,25 +54,10 @@ class Store{
 		//
 
 		//eventQ is the priority queue for Event structs sorted by time
-		priority_queue<Event> EventQ;
+		// priority_queue<Event> EventQ;
 
 		//shopping is the vector where customers will go when they enter the store but are not in line yet
-		vector<Customer> shopping;
 
-		vector<CheckoutLine*> Lines;
-
-		void addCheckoutLine(CheckoutLine Line);
-
-		void handleEvent(Event E);
-
-		int calcCashierTime(int numItems);
-		int calcShoppingTime(int numItems);
-
-		double genRandExp(double beta) const;
-
-		void incTime();
-
-		CheckoutLine* chooseLine();
 
 	public:
 		//constructor
@@ -80,7 +65,22 @@ class Store{
 		//destructor
 		~Store();
 
-		//public functions
+		vector<Customer> Shopping;
 
+		vector<CheckoutLine*> Lines;
+
+		void addCheckoutLine(CheckoutLine Line);
+
+		// void handleEvent(Event E);
+
+		int calcCashierTime(int numItems);
+		int calcShoppingTime(int numItems);
+
+		double genRandExp(double beta) const;
+
+		CheckoutLine* chooseLine();
+
+		int getTime() const;
+		void incTime();
 
 };//end store class
