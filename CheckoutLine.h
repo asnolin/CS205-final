@@ -5,8 +5,6 @@
 #ifndef CS205_FINAL_CHECKOUTLINE_H
 #define CS205_FINAL_CHECKOUTLINE_H
 
-#include <string>
-
 using namespace std;
 
 

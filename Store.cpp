@@ -1,4 +1,4 @@
-sw/*
+/*
  * Store.cpp
  * TODO
  * PRIORITY_QUEUE WILL NOT BE ABLE TO REMOVE ELEMENTS THAT ARE NOT HEAD
@@ -8,11 +8,12 @@ sw/*
 //include Store header file
 #include "Store.hpp"
 
+//====================================================================================================
 void Store::handleEvent(Event E)
 {
 	//Get Event Type
 	EventType T = E.get_type()
-	//========================================================================================================
+	//==================================================
 	if(T == CUSTOMER_ARRIVES)
 	{
 		//Create New Customer Object
@@ -32,7 +33,7 @@ void Store::handleEvent(Event E)
 		Event newEvent2(nextArriveTime, CUSTOMER_ARRIVES, NULL, NULL);
 		EventQ.push(newEvent2);
 	}
-	//========================================================================================================
+	//==================================================
 	else if(T == CUSTOMER_CHECKOUT_READY)
 	{
 		Customer *C = E.get_obj();
@@ -76,7 +77,7 @@ void Store::handleEvent(Event E)
 			EventQ.make_event(abTime, CUSTOMER_ABANDONS_LINE, C, L);
 		}
 	}
-	//========================================================================================================
+	//==================================================
 	else if(T == CUSTOMER_CHECKOUT_FINISH)
 	{
 		// TODO Calculate Statistics about Customer
@@ -88,7 +89,7 @@ void Store::handleEvent(Event E)
 
 		//Free Memory Allocated to Customer ?
 	}
-	//========================================================================================================
+	//==================================================
 	else if(T == CUSTOMER_CHANGES_LINE)
 	{
 		Customer *C = E.getCust();
@@ -131,16 +132,17 @@ void Store::handleEvent(Event E)
 		}
 
 	}
-	//========================================================================================================
+	//==================================================
 	else if(T == CUSTOMER_ABANDONS_LINE)
 	{
 		L->decNumCustomers();
 		L->updateNumItems(-1 * C->getNumItems());
 
 		//Free Memory Allocated to Customer ?
-	}
-	//========================================================================================================
+	};
+	//==================================================
 }
+//====================================================================================================
 
 void Store::addCheckoutLine(CheckoutLine Line){
 	//TODO
