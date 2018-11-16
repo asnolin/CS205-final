@@ -69,7 +69,7 @@ class Store{
 
 		vector<CheckoutLine*> Lines;
 
-		void addCheckoutLine(CheckoutLine Line);
+		void addCheckoutLine(CheckoutLine *L);
 
 		// void handleEvent(Event E);
 

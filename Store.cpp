@@ -146,8 +146,8 @@ void Store::handleEvent(Event E)
 //====================================================================================================
 */
 
-void Store::addCheckoutLine(CheckoutLine Line){
-	//TODO
+void Store::addCheckoutLine(CheckoutLine *L){
+	Lines.push_back(L);
 }
 
 CheckoutLine* Store::chooseLine(){
