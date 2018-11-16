@@ -43,7 +43,7 @@ class Store{
 		int arrivalSeed;
 
 		//eventType is an enum for all types of events
-		enum eventType {CUSTOMER_ARRIVES, CUSTOMER_CHECKOUT_READY, CUSTOMER_CHECKOUT_FINISH, CUSTOMER_CHANGES_LINE, CUSTOMER_ABANDONS_LINE};
+		enum EventType {CUSTOMER_ARRIVES, CUSTOMER_CHECKOUT_READY, CUSTOMER_CHECKOUT_FINISH, CUSTOMER_CHANGES_LINE, CUSTOMER_ABANDONS_LINE};
 
 
 		//TODO
@@ -54,7 +54,7 @@ class Store{
 		//
 
 		//eventQ is the priority queue for Event structs sorted by time
-		priority_queue<Event> eventQ;
+		priority_queue<Event> EventQ;
 
 		//shopping is the vector where customers will go when they enter the store but are not in line yet
 		vector<Customer> shopping;
@@ -65,7 +65,7 @@ class Store{
 
 		void handleEvent(Event E);
 
-		int calcCheckoutTime(int numItems);
+		int calcCashierTime(int numItems);
 		int calcShoppingTime(int numItems);
 
 		double genRandExp(double beta) const;

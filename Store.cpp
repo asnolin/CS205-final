@@ -1,4 +1,4 @@
-/*
+sw/*
  * Store.cpp
  * TODO
  * PRIORITY_QUEUE WILL NOT BE ABLE TO REMOVE ELEMENTS THAT ARE NOT HEAD
@@ -11,78 +11,135 @@
 void Store::handleEvent(Event E)
 {
 	//Get Event Type
-	eventType t = E.get_type()
-
-	if(t == CUSTOMER_ARRIVES)
+	EventType T = E.get_type()
+	//========================================================================================================
+	if(T == CUSTOMER_ARRIVES)
 	{
 		//Create New Customer Object
 		Customer aCustomer(Time);
 
+		//Calculate How Long the Customer Will Shop
 		int shopTime = calcCheckoutTime(aCustomer.getNumItems());
 
-		Event newEvent1(Time+shopTime, CUSTOMER_CHECKOUT_READY, E.getCustomer());
-		eventQ.push(newEvent1);
+		//Add CHECKOUT_READY Event For New Customer
+		Event newEvent1(Time+shopTime, CUSTOMER_CHECKOUT_READY, aCustomer, NULL);
+		EventQ.push(newEvent1);
 
-		int arrivalInterval = genRandExp(arrivalSeed);
+		//Calculate When Next Customer Arrives
+		int nextArriveTime = Time + genRandExp(arrivalSeed);
 
-		Event newEvent2(Time+arrivalInterval, CUSTOMER_ARRIVES, NULL, NULL);
-		eventQ.push(newEvent2);
+		//Add CUSTOMER_ARRIVES Event to Event Queue
+		Event newEvent2(nextArriveTime, CUSTOMER_ARRIVES, NULL, NULL);
+		EventQ.push(newEvent2);
 	}
-
-	else if(t == CUSTOMER_CHECKOUT_READY)
+	//========================================================================================================
+	else if(T == CUSTOMER_CHECKOUT_READY)
 	{
 		Customer *C = E.get_obj();
 		CheckoutLine *L = chooseLine();
 
-
-		//Given a Pointer to a Checkout Line (L)...
-		//Calculate 3 Times
-			// Finishes Checkout
-			// Changes Line
-			// Abandons Line
-
+		//Determine Absolute Time that Customer will Abandon Store
 		C->setAbandonTime(Time);
 
-		int CheckoutTime = L->getWaitTime();
-		int SwitchTime = C->getOppFactor + Time;
-		int AbandonTime = C->getAbandonTime;
-
-		//Update Checkout Line Variables
+		//Calculate the Times for the Customer's 3 Options
+		int chTime = L->getWaitTime();
+		int swTime = C->getOppFactor() + Time;
+		int abTime = C->getAbandonTime();
 
 	  //Create Event Based on Shortest of the Times
-		if(CheckoutTime<=SwitchTime & CheckoutTime<=AbandonTime)
+		if(chTime<=swTime & chTime<=abTime)
 		{
-			FinishTime = CheckoutTime + calcCheckoutTime(C->numItems);
-			eventQ.make_event(FinishTime, CUSTOMER_CHECKOUT_FINISH, C, L);
+			csTime = calcCashierTime(C->getNumItems());
+
+			//Update Line Variables
+			L->incNumCustomers();
+			L->updateNumItems(C->getNumItems());
+			L->updateWaitTime(csTime);
+
+			FinishTime = chTime + csTime;
+			EventQ.make_event(FinishTime, CUSTOMER_CHECKOUT_FINISH, C, L);
 		}
-		if(SwitchTime<CheckoutTime & SwitchTime<=AbandonTime)
+
+		if(swTime<chTime & swTime<=abTime)
 		{
-			eventQ.make_event(SwitchTime, CUSTOMER_CHANGES_LINE, C, L);
+			L->incNumCustomers();
+			L->updateNumItems(C->getNumItems());
+
+			EventQ.make_event(swTime, CUSTOMER_CHANGES_LINE, C, L);
 		}
-		if(AbandonTime<SwitchTime & AbandonTime<CheckoutTime)
+
+		if(abTime<swTime & abTime<chTime)
 		{
-			eventQ.make_event(AbandonTime, CUSTOMER_ABANDONS_LINE, C, L);
+			L->incNumCustomers();
+			L->updateNumItems(C->getNumItems());
+
+			EventQ.make_event(abTime, CUSTOMER_ABANDONS_LINE, C, L);
 		}
-	};
-	/*
-	else if(t == CUSTOMER_CHECKOUT_FINISH)
+	}
+	//========================================================================================================
+	else if(T == CUSTOMER_CHECKOUT_FINISH)
 	{
 		// TODO Calculate Statistics about Customer
+		Customer *C = E.getCust();
+		CheckoutLone *L = E.getLine();
 
+		L->decNumCustomers();
+		L->updateNumItems(-1 * C->getNumItems());
+
+		//Free Memory Allocated to Customer ?
 	}
-
-	else if(t == CUSTOMER_CHANGES_LINE)
+	//========================================================================================================
+	else if(T == CUSTOMER_CHANGES_LINE)
 	{
-		//TODO Choose New Line
-		//TODO Update Checkout Line Variables
-	}
+		Customer *C = E.getCust();
+		CheckoutLone *oldL = E.getLine();
+		CheckoutLine *newL = chooseLine();
 
-	else if(t == CUSTOMER_ABANDONS_LINE)
-	{
-		//TODO Update Line Statistics
-		//Free Customer Memory
+		oldL->decNumCustomers();
+		oldL->updateNumItems(-1 * C->getNumItems());
+
+		int chTime = newL->getWaitTime();
+		int swTime = C->getOppFactor() + Time;
+		int abTime = C->getAbandonTime();
+
+		//Create Event Based on Shortest of the Times
+		if(chTime<=swTime & chTime<=abTime)
+		{
+			csTime = calcCashierTime(C->getNumItems());
+
+			//Update Line Variables
+			newL->incNumCustomers();
+			newL->updateNumItems(C->getNumItems());
+			newL->updateWaitTime(csTime);
+
+			FinishTime = chTime + csTime;
+			EventQ.make_event(FinishTime, CUSTOMER_CHECKOUT_FINISH, C, newL);
+		}
+		if(swTime<chTime & swTime<=abTime)
+		{
+			newL->incNumCustomers();
+			newL->updateNumItems(C->getNumItems());
+
+			EventQ.make_event(swTime, CUSTOMER_CHANGES_LINE, C, newL);
+		}
+		if(abTime<swTime & abTime<chTime)
+		{
+			newL->incNumCustomers();
+			newL->updateNumItems(C->getNumItems());
+
+			EventQ.make_event(abTime, CUSTOMER_ABANDONS_LINE, C, newL);
+		}
+
 	}
-	*/
+	//========================================================================================================
+	else if(T == CUSTOMER_ABANDONS_LINE)
+	{
+		L->decNumCustomers();
+		L->updateNumItems(-1 * C->getNumItems());
+
+		//Free Memory Allocated to Customer ?
+	}
+	//========================================================================================================
 }
 
 void Store::addCheckoutLine(CheckoutLine Line){
@@ -113,7 +170,7 @@ int Store::calcShoppingTime(int numItems){
 	return(numItems);
 }
 
-int Store::calcCheckoutTime(int numItems){
+int Store::calcCashierTime(int numItems){
 	//TODO
 	return(numItems);
 }
