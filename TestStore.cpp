@@ -17,11 +17,12 @@ int main()
   L2.updateNumItems(25);
   L2.updateWaitTime(25);
 
-  //CheckoutLine L3;
-  //theStore.addCheckoutLine(&L3);
-  //L3.updateNumItems(20);
-  //L3.updateWaitTime(20);
+  CheckoutLine L3;
+  theStore.addCheckoutLine(&L3);
+  L3.updateNumItems(20);
+  L3.updateWaitTime(20);
 
+  /*
   //==============================================
   //TESTING CUSTOMER FINISHES CHECKOUT
   //==============================================
@@ -42,6 +43,7 @@ int main()
   printf("Line 1 Customers %d | Line 1 Items %d | Line 1 Wait Time: %d\n", L1.getNumCustomers(), L1.getNumItems(),L1.getWaitTime());
   printf("\n");
   theStore.printQ();
+  */
 
   /*
   //==============================================
