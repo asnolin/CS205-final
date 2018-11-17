@@ -8,7 +8,6 @@
 //include Store header file
 #include "Store.hpp"
 
-/*
 //====================================================================================================
 void Store::handleEvent(Event E)
 {
@@ -144,7 +143,6 @@ void Store::handleEvent(Event E)
 	//==================================================
 }
 //====================================================================================================
-*/
 
 void Store::addCheckoutLine(CheckoutLine *L){
 	Lines.push_back(L);
