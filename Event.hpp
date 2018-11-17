@@ -22,9 +22,9 @@ using namespace std;
 //would be nice to be able to overwrite this definition from another file
 //#ifdef and #ifndef?
 //
-//eventType stores the enumeration of all possible event types the EventNode can be
-enum eventType {CUSTOMER_ARRIVES, CUSTOMER_CHECKOUT_READY, CUSTOMER_CHECKOUT_FINISH,
-		CUSTOMER_CHANGES_LINE, CUSOMER_ABANDONS_LINE, VOID_EVENT};
+//EventType stores the enumeration of all possible event types the EventNode can be
+enum EventType {CUSTOMER_ARRIVES, CUSTOMER_CHECKOUT_READY, CUSTOMER_CHECKOUT_FINISH,
+		CUSTOMER_CHANGES_LINE, CUSTOMER_ABANDONS_LINE, VOID_EVENT};
 
 
 		//nested struct EventNode
@@ -34,13 +34,13 @@ class EventNode{
 		unsigned long int time; //time that event will occur at
 		U *obj1; //pointer to first object involved in event
 		V *obj2; //pointer to second object involved in event
-		eventType type; //type of event
+		EventType type; //type of event
 	public:
 		//no-arg constructor
 		EventNode();
 
 		//constructor
-		EventNode(unsigned long int inTime, U *inObj1, V *inObj2, eventType inType);
+		EventNode(unsigned long int inTime, U *inObj1, V *inObj2, EventType inType);
 
 		//overloaded < operator for priority_queue
 		bool operator<(EventNode<U, V> rhs) const;
@@ -52,7 +52,7 @@ class EventNode{
 		unsigned long int get_time();
 		U *get_obj1();
 		V *get_obj2();
-		eventType get_type();
+		EventType get_type();
 
 };//end EventNode
 
@@ -74,13 +74,13 @@ class EventQueue{
 
 		//creates a new EventNode of class T and adds it to the pq
 		//returns true when successful
-		bool make_event(unsigned long int inT, T *inObj1, S *inObj2,  eventType inType);
+		bool make_event(unsigned long int inT, T *inObj1, S *inObj2,  EventType inType);
 
 		//pops head from event queue and returns it
 		EventNode<T, S> pop();
 
 		//get time for event queue
-		unsigned long int get_current_time() noexcept;
+		unsigned long int get_current_time();
 
 
 };//end EventQueue
@@ -96,7 +96,7 @@ EventNode<U, V>::EventNode(){
 }//end no-arg constructor
 
 template<class U, class V>
-EventNode<U, V>::EventNode(unsigned long int inTime, U *inObj1, V *inObj2, eventType inType){
+EventNode<U, V>::EventNode(unsigned long int inTime, U *inObj1, V *inObj2, EventType inType){
 	time = inTime;
 	obj1 = inObj1;
 	obj2 = inObj2;
@@ -134,7 +134,7 @@ V *EventNode<U, V>::get_obj2(){
 }//end get_obj2
 
 template<class U, class V>
-eventType EventNode<U, V>::get_type(){
+EventType EventNode<U, V>::get_type(){
 	return type;
 }//end get_type
 
@@ -149,7 +149,7 @@ EventQueue<T, S>::EventQueue(){
 }//end no-arg constructor
 
 template<class T, class S>
-bool EventQueue<T, S>::make_event(unsigned long int inT, T *inObj1, S *inObj2, eventType inType){
+bool EventQueue<T, S>::make_event(unsigned long int inT, T *inObj1, S *inObj2, EventType inType){
 	//TODO
 	//CREATING A NEW EVENTNODE IS NOT WORKING
 	//check if inT >= currentTime. return false if inT < currentTime
@@ -169,7 +169,7 @@ bool EventQueue<T, S>::make_event(unsigned long int inT, T *inObj1, S *inObj2, e
 
 //EventQueue get current time
 template<class T, class S>
-unsigned long int EventQueue<T, S>::get_current_time() noexcept{
+unsigned long int EventQueue<T, S>::get_current_time() {
 	return currentTime;
 }//end get_current_time
 

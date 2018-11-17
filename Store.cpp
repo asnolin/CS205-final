@@ -9,10 +9,10 @@
 #include "Store.hpp"
 
 //====================================================================================================
-void Store::handleEvent(Event E)
+void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 {
 	//Get Event Type
-	EventType T = E.get_type()
+	EventType T = E.get_type();
 	//==================================================
 	if(T == CUSTOMER_ARRIVES)
 	{
@@ -20,23 +20,25 @@ void Store::handleEvent(Event E)
 		Customer aCustomer(Time);
 
 		//Calculate How Long the Customer Will Shop
-		int shopTime = calcCheckoutTime(aCustomer.getNumItems());
+		int shopTime = calcCashierTime(aCustomer.getNumItems());
 
 		//Add CHECKOUT_READY Event For New Customer
-		Event newEvent1(Time+shopTime, CUSTOMER_CHECKOUT_READY, aCustomer, NULL);
-		EventQ.push(newEvent1);
+		EventQ.make_event(Time+shopTime, &aCustomer, NULL, CUSTOMER_CHECKOUT_READY);
+		//Event newEvent1(Time+shopTime, CUSTOMER_CHECKOUT_READY, aCustomer, NULL);
+		//EventQ.push(newEvent1);
 
 		//Calculate When Next Customer Arrives
 		int nextArriveTime = Time + genRandExp(arrivalSeed);
 
 		//Add CUSTOMER_ARRIVES Event to Event Queue
-		Event newEvent2(nextArriveTime, CUSTOMER_ARRIVES, NULL, NULL);
-		EventQ.push(newEvent2);
+		EventQ.make_event(nextArriveTime, NULL, NULL, CUSTOMER_ARRIVES);
+		//Event newEvent2(nextArriveTime, CUSTOMER_ARRIVES, NULL, NULL);
+		//EventQ.push(newEvent2);
 	}
 	//==================================================
 	else if(T == CUSTOMER_CHECKOUT_READY)
 	{
-		Customer *C = E.get_obj();
+		Customer *C = E.get_obj1();
 		CheckoutLine *L = chooseLine();
 
 		//Determine Absolute Time that Customer will Abandon Store
@@ -50,15 +52,15 @@ void Store::handleEvent(Event E)
 	  //Create Event Based on Shortest of the Times
 		if(chTime<=swTime & chTime<=abTime)
 		{
-			csTime = calcCashierTime(C->getNumItems());
+			int csTime = calcCashierTime(C->getNumItems());
 
 			//Update Line Variables
 			L->incNumCustomers();
 			L->updateNumItems(C->getNumItems());
 			L->updateWaitTime(csTime);
 
-			FinishTime = chTime + csTime;
-			EventQ.make_event(FinishTime, CUSTOMER_CHECKOUT_FINISH, C, L);
+			int FinishTime = chTime + csTime;
+			EventQ.make_event(FinishTime, C, L, CUSTOMER_CHECKOUT_FINISH);
 		}
 
 		if(swTime<chTime & swTime<=abTime)
@@ -66,7 +68,7 @@ void Store::handleEvent(Event E)
 			L->incNumCustomers();
 			L->updateNumItems(C->getNumItems());
 
-			EventQ.make_event(swTime, CUSTOMER_CHANGES_LINE, C, L);
+			EventQ.make_event(swTime, C, L, CUSTOMER_CHANGES_LINE);
 		}
 
 		if(abTime<swTime & abTime<chTime)
@@ -74,15 +76,15 @@ void Store::handleEvent(Event E)
 			L->incNumCustomers();
 			L->updateNumItems(C->getNumItems());
 
-			EventQ.make_event(abTime, CUSTOMER_ABANDONS_LINE, C, L);
+			EventQ.make_event(abTime, C, L, CUSTOMER_ABANDONS_LINE);
 		}
 	}
 	//==================================================
 	else if(T == CUSTOMER_CHECKOUT_FINISH)
 	{
 		// TODO Calculate Statistics about Customer
-		Customer *C = E.getCust();
-		CheckoutLone *L = E.getLine();
+		Customer *C = E.get_obj1();
+		CheckoutLine *L = E.get_obj2();
 
 		L->decNumCustomers();
 		L->updateNumItems(-1 * C->getNumItems());
@@ -92,8 +94,8 @@ void Store::handleEvent(Event E)
 	//==================================================
 	else if(T == CUSTOMER_CHANGES_LINE)
 	{
-		Customer *C = E.getCust();
-		CheckoutLone *oldL = E.getLine();
+		Customer *C = E.get_obj1();
+		CheckoutLine *oldL = E.get_obj2();
 		CheckoutLine *newL = chooseLine();
 
 		oldL->decNumCustomers();
@@ -106,35 +108,38 @@ void Store::handleEvent(Event E)
 		//Create Event Based on Shortest of the Times
 		if(chTime<=swTime & chTime<=abTime)
 		{
-			csTime = calcCashierTime(C->getNumItems());
+			int csTime = calcCashierTime(C->getNumItems());
 
 			//Update Line Variables
 			newL->incNumCustomers();
 			newL->updateNumItems(C->getNumItems());
 			newL->updateWaitTime(csTime);
 
-			FinishTime = chTime + csTime;
-			EventQ.make_event(FinishTime, CUSTOMER_CHECKOUT_FINISH, C, newL);
+			int FinishTime = chTime + csTime;
+			EventQ.make_event(FinishTime, C, newL, CUSTOMER_CHECKOUT_FINISH);
 		}
 		if(swTime<chTime & swTime<=abTime)
 		{
 			newL->incNumCustomers();
 			newL->updateNumItems(C->getNumItems());
 
-			EventQ.make_event(swTime, CUSTOMER_CHANGES_LINE, C, newL);
+			EventQ.make_event(swTime, C, newL, CUSTOMER_CHANGES_LINE);
 		}
 		if(abTime<swTime & abTime<chTime)
 		{
 			newL->incNumCustomers();
 			newL->updateNumItems(C->getNumItems());
 
-			EventQ.make_event(abTime, CUSTOMER_ABANDONS_LINE, C, newL);
+			EventQ.make_event(abTime, C, newL, CUSTOMER_ABANDONS_LINE);
 		}
 
 	}
 	//==================================================
 	else if(T == CUSTOMER_ABANDONS_LINE)
 	{
+		Customer *C = E.get_obj1();
+		CheckoutLine *L = E.get_obj2();
+
 		L->decNumCustomers();
 		L->updateNumItems(-1 * C->getNumItems());
 
