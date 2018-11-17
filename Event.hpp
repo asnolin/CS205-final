@@ -82,6 +82,7 @@ class EventQueue{
 		//get time for event queue
 		unsigned long int get_current_time();
 
+    bool is_empty();
 
 };//end EventQueue
 
@@ -181,7 +182,8 @@ EventNode<T, S> EventQueue<T, S>::pop() {
 	//needs to free EventNode?
 	//TOP RETURNS A CONST-REFERENCE
 	//
-	if(eventQ.empty()){
+  /*
+  if(eventQ.empty()){
 		throw std::runtime_error("empty eventQ");
 	}else{
 		EventNode<T, S> head  = EventNode<T, S>(eventQ.top());
@@ -190,4 +192,16 @@ EventNode<T, S> EventQueue<T, S>::pop() {
 		currentTime = head.get_time();
 		return head;
 	}
+  */
+  EventNode<T, S> head  = EventNode<T, S>(eventQ.top());
+  eventQ.pop();
+  //update currentTime to the popped event's time
+  currentTime = head.get_time();
+  return head;
 }//end pop()
+
+template<class T, class S>
+bool EventQueue<T, S>::is_empty()
+{
+  return eventQ.empty();
+}

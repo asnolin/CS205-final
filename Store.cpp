@@ -19,19 +19,19 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		//Create New Customer Object
 		Customer aCustomer(Time);
 
+		Shopping.push_back(aCustomer);
+
 		//Calculate How Long the Customer Will Shop
 		int shopTime = calcCashierTime(aCustomer.getNumItems());
 
 		//Add CHECKOUT_READY Event For New Customer
-		EventQ.make_event(Time+shopTime, &aCustomer, NULL, CUSTOMER_CHECKOUT_READY);
-		//Event newEvent1(Time+shopTime, CUSTOMER_CHECKOUT_READY, aCustomer, NULL);
-		//EventQ.push(newEvent1);
+		EventQ.make_event(Time+shopTime, &(Shopping.back()), NULL, CUSTOMER_CHECKOUT_READY);
 
 		//Calculate When Next Customer Arrives
 		int nextArriveTime = Time + genRandExp(arrivalSeed);
 
 		//Add CUSTOMER_ARRIVES Event to Event Queue
-		EventQ.make_event(nextArriveTime, NULL, NULL, CUSTOMER_ARRIVES);
+		EventQ.make_event(15, NULL, NULL, CUSTOMER_ARRIVES);
 		//Event newEvent2(nextArriveTime, CUSTOMER_ARRIVES, NULL, NULL);
 		//EventQ.push(newEvent2);
 	}
@@ -176,6 +176,10 @@ void Store::incTime(){
 	Time = Time+1;
 }
 
+void Store::setTime(int t){
+	Time = t;
+}
+
 int Store::calcShoppingTime(int numItems){
 	//TODO
 	return(numItems);
@@ -192,6 +196,57 @@ double Store::genRandExp(double beta) const{
   x = -beta * log(1.0 - u); // this is the natural log
   return(x);
 }
+
+void Store::printQ()
+{
+	EventNode<Customer, CheckoutLine> E;
+	while(!EventQ.is_empty())
+	{
+		//===================================
+		E = EventQ.pop();
+		//===================================
+		printf("< %d  ", E.get_time());
+		//===================================
+		if(E.get_obj1()==NULL){
+			printf("NULL ");
+		}
+		else{
+			printf("%d  ",E.get_obj1()->getId());
+		}
+ 		//===================================
+		if(E.get_obj2()==NULL){
+			printf("NULL ");
+		}
+		else{
+			printf("%d  ",E.get_obj2()->getID());
+		}
+		//===================================
+		switch(E.get_type())
+		{
+			case 0: printf("CUSTOMER_ARRIVES >");
+				break;
+
+			case 1: printf("CUSTOMER_CHECKOUT_READY >");
+				break;
+
+			case 2: printf("CUSTOMER_CHECKOUT_FINISH >");
+				break;
+
+			case 3: printf("CUSTOMER_CHANGES_LINE >");
+				break;
+
+			case 4: printf("CUSTOMER_ABANDONS_LINE >");
+				break;
+
+			case 5: printf("VOID_EVENT >");
+				break;
+		}
+		//===================================
+		printf("\n");
+	}
+}
+
+int Store::arrivalSeed = 10;
 
 //no-arg Store constructor
 Store::Store(){

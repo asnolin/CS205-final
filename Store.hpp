@@ -41,7 +41,7 @@ class Store{
 
 		//seeds customer ids
 		int idSeed;
-		int arrivalSeed;
+		static int arrivalSeed;
 
 		//TODO
 		//change fidget to a number of ticks the customer would wait before switching a line.
@@ -81,5 +81,8 @@ class Store{
 
 		int getTime() const;
 		void incTime();
+		void setTime(int t);
+
+		void printQ();
 
 };//end store class

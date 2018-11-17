@@ -2,8 +2,37 @@
 
 int main()
 {
+  srand48((long) time(NULL));
+
   Store theStore;
 
+  CheckoutLine L1;
+  CheckoutLine L2;
+  CheckoutLine L3;
+  theStore.addCheckoutLine(&L1);
+  theStore.addCheckoutLine(&L2);
+  theStore.addCheckoutLine(&L3);
+
+  printf("\n");
+  printf("TESTING: Manually Adding Events to Event Queue\n");
+  printf("----------------------------------------------\n");
+
+  printf("//theStore.EventQ.make_event(5, NULL, NULL, CUSTOMER_ARRIVES);\n");
+  theStore.EventQ.make_event(5, NULL, NULL, CUSTOMER_ARRIVES);
+
+  printf("//theStore.EventQ.make_event(10, NULL, NULL, CUSTOMER_ARRIVES);\n");
+  theStore.EventQ.make_event(10, NULL, NULL, CUSTOMER_ARRIVES);
+
+  theStore.setTime(5);
+
+  printf("//theStore.handleEvent(theStore.EventQ.pop());\n");
+  theStore.handleEvent(theStore.EventQ.pop());
+
+  printf("//theStore.printQ();\n\n");
+  theStore.printQ();
+
+  printf("\n");
+  /*
   printf("\nTesting getTime and incTime\n");
   printf("--------------------------------------------------\n");
   int i;
@@ -49,4 +78,5 @@ int main()
   printf("Shortest Line Should Be Line 3: %d\n", Shortest->getID());
 
   printf("\n");
+  */
 }
