@@ -31,9 +31,9 @@ int main() {
     //should be 1
     cout << "Should be 1 and we get " <<Line2.getNumCustomers()<<endl;
     //should be 3
-    cout <<"Should be 1 and we get " << Line3.getNumItems()<<endl;
+    cout <<"Should be 3 and we get " << Line3.getNumItems()<<endl;
     //should be 20
-    cout <<"Should be 1 and we get " << Line4.getWaitTime()<<endl;
+    cout <<"Should be 20 and we get " << Line4.getWaitTime()<<endl;
     //
     Line1.update();
     cout<<Line1.getNumItems()<<endl;
