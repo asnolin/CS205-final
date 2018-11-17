@@ -7,12 +7,46 @@ int main()
   Store theStore;
 
   CheckoutLine L1;
-  CheckoutLine L2;
-  CheckoutLine L3;
+  L1.updateNumItems(10);
+  L1.updateWaitTime(10);
   theStore.addCheckoutLine(&L1);
-  theStore.addCheckoutLine(&L2);
-  theStore.addCheckoutLine(&L3);
 
+  //CheckoutLine L2;
+  //theStore.addCheckoutLine(&L2);
+  //L2.updateNumItems(15);
+  //L2.updateWaitTime(15);
+
+  //CheckoutLine L3;
+  //theStore.addCheckoutLine(&L3);
+  //L3.updateNumItems(20);
+  //L3.updateWaitTime(20);
+
+  /* TESTING CUSTOMER READY FOR CHECKOUT
+  Customer C1(0);
+  Customer C2(0);
+  printf("\nTESTING: Customers Ready For Checkout\n");
+  printf("----------------------------------------\n");
+  printf("Customer %d | Items %d | Opp %d | Imp %d\n", C1.getId(), C1.getNumItems(), C1.getOppFactor(), C1.getImpFactor());
+  printf("Customer %d | Items %d | Opp %d | Imp %d\n", C2.getId(), C2.getNumItems(), C2.getOppFactor(), C2.getImpFactor());
+  printf("\n");
+  theStore.setTime(0);
+
+  theStore.EventQ.make_event(0, &C1, NULL, CUSTOMER_CHECKOUT_READY);
+  theStore.EventQ.make_event(2, &C2, NULL, CUSTOMER_CHECKOUT_READY);
+
+  printf("Line 1 Wait Time: %d\n", L1.getWaitTime());
+  theStore.handleEvent(theStore.EventQ.pop());
+  printf("*Customer 1 Joins Line 1 at Time 0*\n");
+  printf("Line 1 Wait Time: %d\n", L1.getWaitTime());
+  theStore.handleEvent(theStore.EventQ.pop());
+  printf("*Customer 2 Joins Line 1 at Time 2*\n");
+  printf("\n");
+
+  printf("Resulting Event Queue\n");
+  theStore.printQ();
+  */
+
+  /* TESTING CUSTOMER ARRIVES
   printf("\n");
   printf("TESTING: Manually Adding Events to Event Queue\n");
   printf("----------------------------------------------\n");
@@ -30,9 +64,9 @@ int main()
 
   printf("//theStore.printQ();\n\n");
   theStore.printQ();
+  */
 
-  printf("\n");
-  /*
+  /* TESTING CHOOSE LINE
   printf("\nTesting getTime and incTime\n");
   printf("--------------------------------------------------\n");
   int i;
@@ -76,7 +110,7 @@ int main()
   CheckoutLine *Shortest;
   Shortest = theStore.chooseLine();
   printf("Shortest Line Should Be Line 3: %d\n", Shortest->getID());
+  */
 
   printf("\n");
-  */
 }

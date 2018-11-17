@@ -247,6 +247,7 @@ void Store::printQ()
 }
 
 int Store::arrivalSeed = 10;
+unsigned long int Store::Time = 0;
 
 //no-arg Store constructor
 Store::Store(){

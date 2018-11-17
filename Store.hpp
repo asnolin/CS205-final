@@ -37,7 +37,7 @@ using namespace std;
 class Store{
 	private:
 		//fields
-		unsigned long int Time;
+		static unsigned long int Time;
 
 		//seeds customer ids
 		int idSeed;

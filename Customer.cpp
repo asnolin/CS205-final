@@ -51,9 +51,9 @@ Customer::Customer(int arriveTime){
   id = idSeed;
   idSeed++;
 
-  numItems = genRandExp(meanNumItems);
-  oppFactor = genRandExp(meanOppFactor);
-  impFactor = genRandExp(meanImpFactor);
+  numItems = genRandExp(meanNumItems)+1;
+  oppFactor = genRandExp(meanOppFactor)+numItems+1;
+  impFactor = genRandExp(meanImpFactor)+1+numItems+1;
 
   inStoreTime = arriveTime;
 }
