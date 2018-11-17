@@ -87,6 +87,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		CheckoutLine *L = E.get_obj2();
 
 		L->decNumCustomers();
+		L->updateWaitTime(-1 * calcCashierTime(C->getNumItems()));
 		L->updateNumItems(-1 * C->getNumItems());
 
 		//Free Memory Allocated to Customer ?
