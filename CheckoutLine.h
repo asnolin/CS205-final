@@ -5,12 +5,17 @@
 #ifndef CS205_FINAL_CHECKOUTLINE_H
 #define CS205_FINAL_CHECKOUTLINE_H
 
-//using namespace std;
+#include <string>
+#include <vector>
+#include "Customer.hpp"
+
+using namespace std;
 
 
 class CheckoutLine {
 private:
     //fields
+    vector <Customer> customerLine;
     int ID;
     int NumCustomers;
     int NumItems;
@@ -31,10 +36,11 @@ public:
     //void setNumItems(int NumItems);
     //void setWaitTime(int WaitTime);
 
-    void incNumCustomers();
-    void decNumCustomers();
+    void incNumCustomers(Customer in);
+    void decNumCustomers(Customer out);
     void updateNumItems(int n);
     void updateWaitTime(int n);
+    void update();
 
 
 
