@@ -48,12 +48,13 @@ int main(int argc, char* argv[]){
 
 	cout << "compiled" << endl;
 
-	Data d1 = Data();
-	Data d2 = Data();
-
-	Stuff myStuff = Stuff();
-
+	
 	try{
+		Data d1 = Data();
+		Data d2 = Data();
+
+		Stuff myStuff = Stuff();
+
 		cout<<"testing the ordering of the EventQueue"<<endl;
 		eventQueue.make_event(1, &d1, &myStuff, VOID_EVENT);
 		cout<<"created a node with time = 1" <<endl;
@@ -95,5 +96,37 @@ int main(int argc, char* argv[]){
 	catch(const std::runtime_error){
 		cout<< "ERROR EventQueue was empty when pop() was called"<<endl;
 	}
+
+	//testing advance_head, and getters for EventQueue
+	Data d1, d2, d3;
+	Stuff s1, s2, s3;
+	d1 = Data();
+	d1.set_data(1);
+	d2 = Data();
+	d2.set_data(2);
+	d3 = Data();
+	d3.set_data(3);
+	s1 = Stuff();
+	s1.set_thing(10);
+	s2 = Stuff();
+	s2.set_thing(20);
+	s3 = Stuff();
+	s3.set_thing(30);
+	
+	//order is d2, d3, d1
+	eventQueue.make_event(10, &d1, &s1, CUSTOMER_ARRIVES);
+	eventQueue.make_event(3, &d2, &s2, CUSTOMER_CHECKOUT_FINISH);
+	eventQueue.make_event(5, &d3, &s3, CUSTOMER_CHANGES_LINE);
+	cout<<"The current time of the EventQueue is: " << eventQueue.get_current_time() <<" which should be 3" <<endl;
+	cout << "The first node's obj1 value should be 2 and the address should match " << &d2<< endl;
+	cout <<"obj1's data is: " << eventQueue.get_ptr1()->get_data() <<" address is: "<< eventQueue.get_ptr1() << endl;
+	
+	eventQueue.advance_head();
+	cout << "head was advanced" <<endl;
+	cout << "The second node's time is: " << eventQueue.get_current_time() <<" which should be 5" << endl;
+	cout << "The second node's type is: " << eventQueue.get_current_type() <<" which should be: " << CUSTOMER_CHANGES_LINE << endl;
+	eventQueue.advance_head();
+	cout << "head was advanced"<<endl;
+	cout << "The third node's time is: "<< eventQueue.get_current_time() <<" which should be 10" << endl;
 	return 0;
-}
+}//end main

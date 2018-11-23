@@ -10,7 +10,6 @@
  *
  * TODO
  * implement exceptions?
- * field for line pointer in EventNode
  */
 
 #include<memory>
@@ -20,7 +19,7 @@ using namespace std;
 
 //TODO
 //would be nice to be able to overwrite this definition from another file
-//#ifdef and #ifndef?
+//#ifdef and #ifndef? 
 //
 //eventType stores the enumeration of all possible event types the EventNode can be
 enum eventType {CUSTOMER_ARRIVES, CUSTOMER_CHECKOUT_READY, CUSTOMER_CHECKOUT_FINISH, 
@@ -57,33 +56,6 @@ class EventNode{
 
 };//end EventNode
 
-
-
-template<class T, class S>
-class EventQueue{
-	private:
-	//priority queue that contains EventNodes
-	priority_queue<EventNode<T, S>, std::vector<EventNode<T, S> >, std::greater<EventNode<T, S> > > eventQ;	
-
-	//minimum time an event can be and current time for the system
-	unsigned long int currentTime;	
-
-	public:		
-	//no-arg construtctor
-	EventQueue();
-	
-	//creates a new EventNode of class T and adds it to the pq
-	//returns true when successful
-	bool make_event(unsigned long int inT, T *inObj1, S *inObj2,  eventType inType);
-
-	//removes head EventNode and returns a copy of it	
-	EventNode<T, S> pop();
-
-	//get time for event queue
-	unsigned long int get_current_time() noexcept;
-
-
-};//end EventQueue
 
 
 //Event Node constructors
@@ -140,22 +112,57 @@ eventType EventNode<U, V>::get_type(){
 
 
 
+template<class T, class S>
+class EventQueue{
+	private:
+	//priority queue that contains EventNodes
+	priority_queue<EventNode<T, S>, std::vector<EventNode<T, S> >, std::greater<EventNode<T, S> > > eventQ;	
+
+	//minimum time an event can be and current time for the system
+	unsigned long int currentTime;	
+
+
+	public:
+	//no-arg construtctor
+	EventQueue();
+	
+	//creates a new EventNode of class T and adds it to the pq
+	//returns true when successful
+	bool make_event(unsigned long int inT, T *inObj1, S *inObj2,  eventType inType);
+
+	//removes head EventNode and returns a copy of it	
+	EventNode<T, S> pop();
+
+	//advance head
+	void advance_head();
+
+	//get time for event queue
+	unsigned long int get_current_time();
+
+	//get event type of head
+	eventType get_current_type();
+
+	//get pointer to obj1 of head
+	T* get_ptr1();
+
+	//get pointer to obj2 of head
+	S* get_ptr2();
+
+};//end EventQueue
+
+
 
 //EventQueue constructor
 template<class T, class S>
 EventQueue<T, S>::EventQueue(){
 	//init currentTime
 	currentTime = 0;
-	//TODO
-	//init the eventQ?
 }//end no-arg constructor
 
-//make_event method
+
+//priority_queue manipulators
 template<class T, class S>
 bool EventQueue<T, S>::make_event(unsigned long int inT, T *inObj1, S *inObj2, eventType inType){
-	//TODO
-	//CREATING A NEW EVENTNODE IS NOT WORKING
-	//check if inT >= currentTime. return false if inT < currentTime
 	if(inT < currentTime){
 		return false;
 	}else{
@@ -168,29 +175,74 @@ bool EventQueue<T, S>::make_event(unsigned long int inT, T *inObj1, S *inObj2, e
 	}
 }//end make_event
 
-
-
-//EventQueue get current time
-template<class T, class S>
-unsigned long int EventQueue<T, S>::get_current_time() noexcept{
-	return currentTime;
-}//end get_current_time
-
-
-
 template<class T, class S>
 EventNode<T, S> EventQueue<T, S>::pop() {
-	//TODO
-	//needs to free EventNode?
-	//TOP RETURNS A CONST-REFERENCE 
-	//
 	if(eventQ.empty()){
 		throw std::runtime_error("empty eventQ");
 	}else{
-		EventNode<T, S> head  = EventNode<T, S>(eventQ.top());
+		//save head and pop head from priority_queue
+		EventNode<T, S> head  = eventQ.top();
 		eventQ.pop();
 		//update currentTime to the popped event's time
 		currentTime = head.get_time();
 		return head;
 	}
 }//end pop()
+
+template<class T, class S>
+void EventQueue<T, S>::advance_head(){
+	if(!eventQ.empty()){
+		//pop head element and update currentTime
+		eventQ.pop();
+		EventNode<T, S> node = eventQ.top();
+		currentTime = node.get_time();
+	}
+}//end advance_head
+
+
+//EventQueue getters
+//TODO
+//ask lisa why I can't do something like:
+//eventType type = eventQ.top().get_type();
+//becuase I get a "passing const value_type as 'this' argument discared qualifiers
+//eventQ.top() is a const reference to an eventNode
+//I can do EventNode<T, S> node = eventQ.top();
+//If this is possible, would it result in a speedup 
+//
+//
+template<class T, class S>
+unsigned long int EventQueue<T, S>::get_current_time(){
+	EventNode<T, S> node = eventQ.top();
+	currentTime = node.get_time();
+	return currentTime;
+}//end get_current_time
+
+template<class T, class S>
+eventType EventQueue<T, S>::get_current_type(){
+	if(eventQ.empty()){
+		return VOID_EVENT;
+	}else{
+		EventNode<T, S> node = eventQ.top();
+		return node.get_type();
+	}
+}//end get_type
+
+template<class T, class S>
+T* EventQueue<T, S>::get_ptr1(){
+	if(eventQ.empty()){
+		return nullptr;
+	}else{
+		EventNode<T, S> node  = eventQ.top();
+		return node.get_obj1();
+	}
+}//end get_obj1
+
+template<class T, class S>
+S* EventQueue<T, S>::get_ptr2(){
+	if(eventQ.empty()){
+		return nullptr;
+	}else{
+		EventNode<T, S> node = eventQ.top();
+		return node.get_obj2();
+	}
+}//end get_obj2
