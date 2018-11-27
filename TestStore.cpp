@@ -2,8 +2,168 @@
 
 int main()
 {
-  Store theStore;
+  srand48((long) time(NULL));
 
+  Store theStore;
+  theStore.setTime(0);
+
+  CheckoutLine L1;
+  theStore.addCheckoutLine(&L1);
+  L1.updateNumItems(0);
+  L1.updateWaitTime(0);
+
+  CheckoutLine L2;
+  theStore.addCheckoutLine(&L2);
+  L2.updateNumItems(0);
+  L2.updateWaitTime(0);
+
+  CheckoutLine L3;
+  theStore.addCheckoutLine(&L3);
+  L3.updateNumItems(0);
+  L3.updateWaitTime(0);
+
+  EventNode<Customer,CheckoutLine> E;
+
+  theStore.EventQ.make_event(0, NULL, NULL, CUSTOMER_ARRIVES);
+
+  theStore.setTime(E.get_time());
+  E = theStore.EventQ.pop();
+  while(theStore.getTime() < 100)
+  {
+    theStore.setTime(E.get_time());
+    theStore.handleEvent(E);
+    E = theStore.EventQ.pop();
+  }
+  printf("====================================\n");
+  printf("\n");
+  theStore.printQ();
+  /*
+  //==============================================
+  //TESTING CUSTOMER FINISHES CHECKOUT
+  //==============================================
+  printf("\nTESTING: Customer Finishes Checkout\n");
+  printf("----------------------------------------\n");
+  Customer C1(0);
+
+  printf("Customer %d | Items %d | Opp %d | Imp %d\n", C1.getId(), C1.getNumItems(), C1.getOppFactor(), C1.getImpFactor());
+  printf("\n");
+  printf("Line 1 Customers %d | Line 1 Items %d | Line 1 Wait Time: %d\n", L1.getNumCustomers(), L1.getNumItems(),L1.getWaitTime());
+  printf("\n");
+
+  theStore.EventQ.make_event(0, &C1, &L1, CUSTOMER_CHECKOUT_FINISH);
+
+  printf("*Customer Abandons Line 1*\n\n");
+  theStore.handleEvent(theStore.EventQ.pop());
+
+  printf("Line 1 Customers %d | Line 1 Items %d | Line 1 Wait Time: %d\n", L1.getNumCustomers(), L1.getNumItems(),L1.getWaitTime());
+  printf("\n");
+  theStore.printQ();
+  */
+
+  /*
+  //==============================================
+  //TESTING CUSTOMER ABANDONS LINE
+  //==============================================
+  printf("\nTESTING: Customer Abadons Line\n");
+  printf("----------------------------------------\n");
+  Customer C1(0);
+
+  printf("Customer %d | Items %d | Opp %d | Imp %d\n", C1.getId(), C1.getNumItems(), C1.getOppFactor(), C1.getImpFactor());
+  printf("\n");
+  printf("Line 1 Customers %d | Line 1 Items %d | Line 1 Wait Time: %d\n", L1.getNumCustomers(), L1.getNumItems(),L1.getWaitTime());
+  printf("\n");
+
+  theStore.EventQ.make_event(0, &C1, &L1, CUSTOMER_ABANDONS_LINE);
+
+  printf("*Customer Abandons Line 1*\n\n");
+  theStore.handleEvent(theStore.EventQ.pop());
+
+  printf("Line 1 Customers %d | Line 1 Items %d | Line 1 Wait Time: %d\n", L1.getNumCustomers(), L1.getNumItems(),L1.getWaitTime());
+  printf("\n");
+  theStore.printQ();
+  */
+
+  /*
+  //==============================================
+  //TESTING CUSTOMER CHANGES Line
+  //==============================================
+  printf("\nTESTING: Customer Changes Line\n");
+  printf("----------------------------------------\n");
+  Customer C1(0);
+  C1.setAbandonTime(0);
+
+  printf("Customer %d | Items %d | Opp %d | Imp %d\n", C1.getId(), C1.getNumItems(), C1.getOppFactor(), C1.getImpFactor());
+  printf("\n");
+  printf("Line 1 Customers %d | Line 1 Items %d | Line 1 Wait Time: %d\n", L1.getNumCustomers(), L1.getNumItems(),L1.getWaitTime());
+  printf("Line 2 Customers %d | Line 2 Items %d | Line 2 Wait Time: %d\n", L2.getNumCustomers(), L2.getNumItems(),L2.getWaitTime());
+  printf("\n");
+
+  theStore.EventQ.make_event(0, &C1, &L1, CUSTOMER_CHANGES_LINE);
+
+  printf("*Customer Changes From Line 1 to Line 2*\n\n");
+  theStore.handleEvent(theStore.EventQ.pop());
+
+  printf("Line 1 Customers %d | Line 1 Items %d | Line 1 Wait Time: %d\n", L1.getNumCustomers(), L1.getNumItems(),L1.getWaitTime());
+  printf("Line 2 Customers %d | Line 2 Items %d | Line 2 Wait Time: %d\n", L2.getNumCustomers(), L2.getNumItems(),L2.getWaitTime());
+  printf("\n");
+  theStore.printQ();
+  */
+
+  /*
+  //==============================================
+  // TESTING CUSTOMER READY FOR CHECKOUT
+  //==============================================
+  Customer C1(0);
+  Customer C2(0);
+  printf("\nTESTING: Customers Ready For Checkout\n");
+  printf("----------------------------------------\n");
+  printf("Customer %d | Items %d | Opp %d | Imp %d\n", C1.getId(), C1.getNumItems(), C1.getOppFactor(), C1.getImpFactor());
+  printf("Customer %d | Items %d | Opp %d | Imp %d\n", C2.getId(), C2.getNumItems(), C2.getOppFactor(), C2.getImpFactor());
+  printf("\n");
+  theStore.setTime(0);
+
+  theStore.EventQ.make_event(0, &C1, NULL, CUSTOMER_CHECKOUT_READY);
+  theStore.EventQ.make_event(0, &C2, NULL, CUSTOMER_CHECKOUT_READY);
+
+  printf("Line 1 Wait Time: %d\n", L1.getWaitTime());
+  theStore.handleEvent(theStore.EventQ.pop());
+  printf("*Customer 1 Joins Line 1 at Time 0*\n");
+  printf("Line 1 Wait Time: %d\n", L1.getWaitTime());
+  theStore.handleEvent(theStore.EventQ.pop());
+  printf("*Customer 2 Joins Line 1 at Time 0*\n");
+  printf("\n");
+
+  printf("Resulting Event Queue\n");
+  theStore.printQ();
+  */
+
+  /*
+  //==============================================
+  // TESTING CUSTOMER ARRIVES
+  //==============================================
+  printf("\n");
+  printf("TESTING: Manually Adding Events to Event Queue\n");
+  printf("----------------------------------------------\n");
+
+  printf("//theStore.EventQ.make_event(5, NULL, NULL, CUSTOMER_ARRIVES);\n");
+  theStore.EventQ.make_event(5, NULL, NULL, CUSTOMER_ARRIVES);
+
+  printf("//theStore.EventQ.make_event(10, NULL, NULL, CUSTOMER_ARRIVES);\n");
+  theStore.EventQ.make_event(10, NULL, NULL, CUSTOMER_ARRIVES);
+
+  theStore.setTime(5);
+
+  printf("//theStore.handleEvent(theStore.EventQ.pop());\n");
+  theStore.handleEvent(theStore.EventQ.pop());
+
+  printf("//theStore.printQ();\n\n");
+  theStore.printQ();
+  */
+
+  /*
+  //==============================================
+  // TESTING CHOOSE LINE
+  //==============================================
   printf("\nTesting getTime and incTime\n");
   printf("--------------------------------------------------\n");
   int i;
@@ -47,6 +207,7 @@ int main()
   CheckoutLine *Shortest;
   Shortest = theStore.chooseLine();
   printf("Shortest Line Should Be Line 3: %d\n", Shortest->getID());
+  */
 
   printf("\n");
 }
