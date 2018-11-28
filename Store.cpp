@@ -303,20 +303,20 @@ void Store::printQ()
 void Store::printEvent(EventNode<Customer, CheckoutLine> E)
 {
 	//===================================
-	printf("< %lu  ", E.get_time());
+	printf("< %3lu  ", E.get_time());
 	//===================================
 	if(E.get_obj1()==NULL){
-		printf("NULL ");
+		printf("NULL  ");
 	}
 	else{
-		printf("C%d  ",E.get_obj1()->getId());
+		printf("C%-3d  ",E.get_obj1()->getId());
 	}
 	//===================================
 	if(E.get_obj2()==NULL){
-		printf("NULL ");
+		printf("NULL  ");
 	}
 	else{
-		printf("L%d  ",E.get_obj2()->getID());
+		printf("L%-3d  ",E.get_obj2()->getID());
 	}
 	//===================================
 	switch(E.get_type())
