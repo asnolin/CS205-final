@@ -17,10 +17,12 @@ int main()
   L2.updateNumItems(0);
   L2.updateWaitTime(0);
 
+  /*
   CheckoutLine L3;
   theStore.addCheckoutLine(&L3);
   L3.updateNumItems(0);
   L3.updateWaitTime(0);
+  */
 
   EventNode<Customer,CheckoutLine> E;
 

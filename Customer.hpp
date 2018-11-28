@@ -16,8 +16,8 @@ class Customer{
     // Mean Number of Items Shoppers will Have, Used in genRandExp
     static const int meanNumItems = 10;
 
-    static const int meanOppFactor = 20;
-    static const int meanImpFactor = 50;
+    static const int meanOppFactor = 10; //20
+    static const int meanImpFactor = 15; //50
 
     double genRandExp(double beta) const;
 

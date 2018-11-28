@@ -65,7 +65,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		C->setAbandonTime(Time);
 
 		//Customer Has 3 Options: Stay In Line, Change Lines, Abandon Store
-		int chTime = L->getWaitTime(); //Time Customer would Start Checkout
+		int chTime = L->getWaitTime() + Time; //Time Customer would Start Checkout (Scanning Items)
 		int swTime = C->getOppFactor() + Time; //Time Customer would Switch Lines
 		int abTime = C->getAbandonTime(); //Time Customer would Abandon Store
 
@@ -145,7 +145,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		newL->updateNumItems(C->getNumItems());
 
 		//Customer Has 3 Options: Stay In Line, Change Lines, Abandon Store
-		int chTime = newL->getWaitTime(); //Time Customer would Start Checkout
+		int chTime = newL->getWaitTime() + Time; //Time Customer would Start Checkout (Scanning Items)
 		int swTime = C->getOppFactor() + Time; //Time Customer would Switch Lines
 		int abTime = C->getAbandonTime(); //Time Customer would Abandon Store
 
@@ -343,7 +343,7 @@ void Store::printEvent(EventNode<Customer, CheckoutLine> E)
 	printf("\n\n");
 }
 
-int Store::arrivalSeed = 10;
+int Store::arrivalSeed = 5; //10
 unsigned long int Store::Time = 0;
 
 //no-arg Store constructor
