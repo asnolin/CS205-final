@@ -40,10 +40,10 @@ void CheckoutLine::decNumCustomers(Customer out){
     }
 };
 void CheckoutLine::updateNumItems(int n){
-    NumItems = n;
+    NumItems = NumItems + n;
 };
 void CheckoutLine::updateWaitTime(int n){
-    WaitTime = n;
+    WaitTime = NumItems + n;
 };
 
 void CheckoutLine::update() {
