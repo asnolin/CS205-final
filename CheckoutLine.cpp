@@ -43,7 +43,7 @@ void CheckoutLine::updateNumItems(int n){
     NumItems = NumItems + n;
 };
 void CheckoutLine::updateWaitTime(int n){
-    WaitTime = NumItems + n;
+    WaitTime = WaitTime + n;
 };
 
 void CheckoutLine::update() {
