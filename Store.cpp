@@ -29,7 +29,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		Shopping.push_back(*aCustomer);
 
 		//Calculate How Long the Customer Will Shop
-		int shopTime = calcCashierTime(aCustomer->getNumItems());
+		int shopTime = calcShoppingTime(aCustomer->getNumItems());
 
 		EventNode<Customer, CheckoutLine> Print1(Time+shopTime, aCustomer, NULL, CUSTOMER_CHECKOUT_READY);
 		printf("CREATED EVENT\n");
