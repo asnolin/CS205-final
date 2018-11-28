@@ -1,3 +1,6 @@
+#ifndef CS205_FINAL_CUSTOMER_H
+#define CS205_FINAL_CUSTOMER_H
+
 class Customer{
   private:
     int id;
@@ -35,3 +38,5 @@ class Customer{
 
     Customer(int arriveTime);
 };
+
+#endif /* LIBRARY_FILENAME_H */
