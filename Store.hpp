@@ -30,21 +30,18 @@
 
 #include "Customer.hpp"
 #include "CheckoutLine.h"
+#include "Event.hpp"
 
 using namespace std;
 
 class Store{
 	private:
 		//fields
-		unsigned long int Time;
+		static unsigned long int Time;
 
 		//seeds customer ids
 		int idSeed;
-		int arrivalSeed;
-
-		//eventType is an enum for all types of events
-		enum EventType {CUSTOMER_ARRIVES, CUSTOMER_CHECKOUT_READY, CUSTOMER_CHECKOUT_FINISH, CUSTOMER_CHANGES_LINE, CUSTOMER_ABANDONS_LINE};
-
+		static int arrivalSeed;
 
 		//TODO
 		//change fidget to a number of ticks the customer would wait before switching a line.
@@ -69,9 +66,11 @@ class Store{
 
 		vector<CheckoutLine*> Lines;
 
+		EventQueue<Customer, CheckoutLine> EventQ;
+
 		void addCheckoutLine(CheckoutLine *L);
 
-		// void handleEvent(Event E);
+		void handleEvent(EventNode<Customer,CheckoutLine> E);
 
 		int calcCashierTime(int numItems);
 		int calcShoppingTime(int numItems);
@@ -79,8 +78,16 @@ class Store{
 		double genRandExp(double beta) const;
 
 		CheckoutLine* chooseLine();
+		void printLines();
+		void printCusts();
+
+		void removeCustomer(int ID);
 
 		int getTime() const;
 		void incTime();
+		void setTime(int t);
+
+		void printQ();
+		void printEvent(EventNode<Customer, CheckoutLine> E);
 
 };//end store class
