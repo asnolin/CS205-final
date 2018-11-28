@@ -11,188 +11,197 @@
 //====================================================================================================
 void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 {
-	//Get Event Type
-	EventType T = E.get_type();
+	//Print The Current Time
+	printf("========================= %lu =========================\n\n", Time);
 
-	printf("========================= %lu =========================\n", Time);
+	//Print the Status of the CheckoutLines and Customers
 	printLines();
 	printCusts();
-	printf("\nPROCESSING EVENT\n");
-	printEvent(E);
-	printf("\n");
-	//==================================================
-	if(T == CUSTOMER_ARRIVES)
-	{
-		//Create New Customer Object
-		Customer *aCustomer = new Customer(Time);
 
+	//Print the Current Event being Processed
+	printf("PROCESSING EVENT\n");
+	printEvent(E);
+
+	//==================================================
+	if(E.get_type() == CUSTOMER_ARRIVES)
+	{
+		//Create New Customer Object in Heap Memory
+		Customer *aCustomer = new Customer(Time);
+		//Add the New Customer to the Store's Vector of all Customers
 		Shopping.push_back(*aCustomer);
 
-		//Calculate How Long the Customer Will Shop
+		//Calculate how Long the Customer will Shop based on Number of Items
 		int shopTime = calcShoppingTime(aCustomer->getNumItems());
-
-		EventNode<Customer, CheckoutLine> Print1(Time+shopTime, aCustomer, NULL, CUSTOMER_CHECKOUT_READY);
-		printf("CREATED EVENT\n");
-		printEvent(Print1);
-		printf("\n");
-		//Add CHECKOUT_READY Event For New Customer
+		//Add Checkout_Ready Event for New Customer
 		EventQ.make_event(Time+shopTime, aCustomer, NULL, CUSTOMER_CHECKOUT_READY);
 
-		//Calculate When Next Customer Arrives
-		int nextArriveTime = Time + genRandExp(arrivalSeed);
-
-
-		EventNode<Customer, CheckoutLine> Print2(nextArriveTime, NULL, NULL, CUSTOMER_ARRIVES);
+		//Create a Checkout_Ready Event and Print It
 		printf("CREATED EVENT\n");
-		printEvent(Print2);
-		printf("\n");
-		//Add CUSTOMER_ARRIVES Event to Event Queue
+		EventNode<Customer, CheckoutLine> Print1(Time+shopTime, aCustomer, NULL, CUSTOMER_CHECKOUT_READY);
+		printEvent(Print1);
+
+		//Calculate when Next Customer Arrives
+		int nextArriveTime = Time + genRandExp(arrivalSeed);
+		//Add Customer_Arrives Event
 		EventQ.make_event(nextArriveTime, NULL, NULL, CUSTOMER_ARRIVES);
-		//Event newEvent2(nextArriveTime, CUSTOMER_ARRIVES, NULL, NULL);
-		//EventQ.push(newEvent2);
+
+		//Create a Customer_Arrives Event and Print It
+		printf("CREATED EVENT\n");
+		EventNode<Customer, CheckoutLine> Print2(nextArriveTime, NULL, NULL, CUSTOMER_ARRIVES);
+		printEvent(Print2);
 	}
 	//==================================================
-	else if(T == CUSTOMER_CHECKOUT_READY)
+	else if(E.get_type() == CUSTOMER_CHECKOUT_READY)
 	{
+		//Pull Customer Pointer from Event
 		Customer *C = E.get_obj1();
+		//Decide which CheckoutLine the Customer should Join
 		CheckoutLine *L = chooseLine();
+		//Update CheckoutLine Variables
+		L->incNumCustomers(*C);
+		L->updateNumItems(C->getNumItems());
 
-		//Determine Absolute Time that Customer will Abandon Store
+		//Determine Time that Customer will Abandon Store, This Value Will Not Change
 		C->setAbandonTime(Time);
 
-		//Calculate the Times for the Customer's 3 Options
-		int chTime = L->getWaitTime();
-		int swTime = C->getOppFactor() + Time;
-		int abTime = C->getAbandonTime();
+		//Customer Has 3 Options: Stay In Line, Change Lines, Abandon Store
+		int chTime = L->getWaitTime(); //Time Customer would Start Checkout
+		int swTime = C->getOppFactor() + Time; //Time Customer would Switch Lines
+		int abTime = C->getAbandonTime(); //Time Customer would Abandon Store
 
-	  //Create Event Based on Shortest of the Times
-		if(chTime<=swTime & chTime<=abTime)
+	  //Create an Event that Corresponds to Lowest of the 3 Times
+		if(chTime<=swTime & chTime<=abTime) //Customer will Finish Checkout in Current Line
 		{
-			int csTime = calcCashierTime(C->getNumItems());
+			//Update WaitTime of CheckoutLine
+			L->updateWaitTime(calcCashierTime(C->getNumItems()));
 
-			//Update Line Variables
-			L->incNumCustomers(*C);
-			L->updateNumItems(C->getNumItems());
-			L->updateWaitTime(csTime);
-
-			int FinishTime = chTime + csTime + Time;
-			EventNode<Customer, CheckoutLine> Print3(FinishTime, C, L, CUSTOMER_CHECKOUT_FINISH);
-			printf("CREATED EVENT\n");
-			printEvent(Print3);
-			printf("\n");
-
+			//Time that Customer Finishes Checkout Equals...
+			//Time Waiting in Line + Time Scanning Items + Current Time
+			int FinishTime = chTime + calcCashierTime(C->getNumItems()) + Time;
+			//Add Checkout_Finish Event
 			EventQ.make_event(FinishTime, C, L, CUSTOMER_CHECKOUT_FINISH);
-		}
 
-		if(swTime<chTime & swTime<=abTime)
-		{
-			L->incNumCustomers(*C);
-			L->updateNumItems(C->getNumItems());
-
-			EventNode<Customer, CheckoutLine> Print4(swTime, C, L, CUSTOMER_CHANGES_LINE);
+			//Create a Checkout_Finish Event and Print It
 			printf("CREATED EVENT\n");
-			printEvent(Print4);
-			printf("\n");
-
-			EventQ.make_event(swTime, C, L, CUSTOMER_CHANGES_LINE);
+			EventNode<Customer, CheckoutLine> Print3(FinishTime, C, L, CUSTOMER_CHECKOUT_FINISH);
+			printEvent(Print3);
 		}
-
-		if(abTime<swTime & abTime<chTime)
+		if(swTime<chTime & swTime<=abTime) //Customer will Switch Checkout Lines
 		{
-			L->incNumCustomers(*C);
-			L->updateNumItems(C->getNumItems());
+			//Add Changes_Line Event
+			EventQ.make_event(swTime, C, L, CUSTOMER_CHANGES_LINE);
 
+			//Create a Changes_Line Event and Print It
+			printf("CREATED EVENT\n");
+			EventNode<Customer, CheckoutLine> Print4(swTime, C, L, CUSTOMER_CHANGES_LINE);
+			printEvent(Print4);
+		}
+		if(abTime<swTime & abTime<chTime) //Customer will Abandon Store
+		{
+			//Create Abandons_Line Event
+			EventQ.make_event(abTime, C, L, CUSTOMER_ABANDONS_LINE);
+
+			//Create a Abandons_Line Event and Print It
 			EventNode<Customer, CheckoutLine> Print5(abTime, C, L, CUSTOMER_ABANDONS_LINE);
 			printf("CREATED EVENT\n");
 			printEvent(Print5);
-			printf("\n");
-
-			EventQ.make_event(abTime, C, L, CUSTOMER_ABANDONS_LINE);
 		}
 	}
 	//==================================================
-	else if(T == CUSTOMER_CHECKOUT_FINISH)
+	else if(E.get_type() == CUSTOMER_CHECKOUT_FINISH)
 	{
 		// TODO Calculate Statistics about Customer
+
+		//Pull Customer Pointer from Event
 		Customer *C = E.get_obj1();
+		//Pull CheckoutLine Pointer from Event
 		CheckoutLine *L = E.get_obj2();
 
+		//Update CheckoutLine Variables
 		L->decNumCustomers(*C);
 		L->updateWaitTime(-1 * calcCashierTime(C->getNumItems()));
 		L->updateNumItems(-1 * C->getNumItems());
 
+		//Remove Customer from Global Shopping Vector
 		removeCustomer(C->getId());
+
 		//Free Memory Allocated to Customer ?
 	}
 	//==================================================
-	else if(T == CUSTOMER_CHANGES_LINE)
+	else if(E.get_type() == CUSTOMER_CHANGES_LINE)
 	{
+		//Pull Customer Pointer from Event
 		Customer *C = E.get_obj1();
+		//Pull CheckoutLine Pointer from Event
 		CheckoutLine *oldL = E.get_obj2();
+		//Decide which CheckoutLine the Customer should Change To
 		CheckoutLine *newL = chooseLine();
 
+		//Update CheckoutLine Variables for Line that Customer is Leaving
 		oldL->decNumCustomers(*C);
 		oldL->updateNumItems(-1 * C->getNumItems());
+		//Update CheckoutLine Variables for Line that Customer is Joining
+		newL->incNumCustomers(*C);
+		newL->updateNumItems(C->getNumItems());
 
-		int chTime = newL->getWaitTime();
-		int swTime = C->getOppFactor() + Time;
-		int abTime = C->getAbandonTime();
+		//Customer Has 3 Options: Stay In Line, Change Lines, Abandon Store
+		int chTime = newL->getWaitTime(); //Time Customer would Start Checkout
+		int swTime = C->getOppFactor() + Time; //Time Customer would Switch Lines
+		int abTime = C->getAbandonTime(); //Time Customer would Abandon Store
 
-		//Create Event Based on Shortest of the Times
-		if(chTime<=swTime & chTime<=abTime)
+	  //Create an Event that Corresponds to Lowest of the 3 Times
+		if(chTime<=swTime & chTime<=abTime) //Customer will Finish Checkout in Current Line
 		{
-			int csTime = calcCashierTime(C->getNumItems());
+			//Update WaitTime of CheckoutLine
+			newL->updateWaitTime(calcCashierTime(C->getNumItems()));
 
-			//Update Line Variables
-			newL->incNumCustomers(*C);
-			newL->updateNumItems(C->getNumItems());
-			newL->updateWaitTime(csTime);
-
-			int FinishTime = chTime + csTime;
-
-			EventNode<Customer, CheckoutLine> Print6(FinishTime, C, newL, CUSTOMER_CHECKOUT_FINISH);
-			printf("CREATED EVENT\n");
-			printEvent(Print6);
-			printf("\n");
-
+			//Time that Customer Finishes Checkout Equals...
+			//Time Waiting in Line + Time Scanning Items + Current Time
+			int FinishTime = chTime + calcCashierTime(C->getNumItems()) + Time;
+			//Add Checkout_Finish Event
 			EventQ.make_event(FinishTime, C, newL, CUSTOMER_CHECKOUT_FINISH);
-		}
-		if(swTime<chTime & swTime<=abTime)
-		{
-			newL->incNumCustomers(*C);
-			newL->updateNumItems(C->getNumItems());
 
-			EventNode<Customer, CheckoutLine> Print7(swTime, C, newL, CUSTOMER_CHANGES_LINE);
+			//Create a Checkout_Finish Event and Print It
 			printf("CREATED EVENT\n");
-			printEvent(Print7);
-			printf("\n");
-
-			EventQ.make_event(swTime, C, newL, CUSTOMER_CHANGES_LINE);
+			EventNode<Customer, CheckoutLine> Print6(FinishTime, C, newL, CUSTOMER_CHECKOUT_FINISH);
+			printEvent(Print6);
 		}
-		if(abTime<swTime & abTime<chTime)
+		if(swTime<chTime & swTime<=abTime) //Customer will Switch Checkout Lines
 		{
-			newL->incNumCustomers(*C);
-			newL->updateNumItems(C->getNumItems());
+			//Add Changes_Line Event
+			EventQ.make_event(swTime, C, newL, CUSTOMER_CHANGES_LINE);
 
+			//Create a Changes_Line Event and Print It
+			printf("CREATED EVENT\n");
+			EventNode<Customer, CheckoutLine> Print7(swTime, C, newL, CUSTOMER_CHANGES_LINE);
+			printEvent(Print7);
+		}
+		if(abTime<swTime & abTime<chTime) //Customer will Abandon Store
+		{
+			//Create Abandons_Line Event
+			EventQ.make_event(abTime, C, newL, CUSTOMER_ABANDONS_LINE);
+
+			//Create a Abandons_Line Event and Print It
 			EventNode<Customer, CheckoutLine> Print8(abTime, C, newL, CUSTOMER_ABANDONS_LINE);
 			printf("CREATED EVENT\n");
 			printEvent(Print8);
-			printf("\n");
-
-			EventQ.make_event(abTime, C, newL, CUSTOMER_ABANDONS_LINE);
 		}
-
 	}
 	//==================================================
-	else if(T == CUSTOMER_ABANDONS_LINE)
+	else if(E.get_type() == CUSTOMER_ABANDONS_LINE)
 	{
+		//Pull Customer Pointer from Event
 		Customer *C = E.get_obj1();
+		//Pull CheckoutLine Pointer from Event
 		CheckoutLine *L = E.get_obj2();
 
+		//Update CheckoutLine Variables for Line that Customer is Leaving
 		L->decNumCustomers(*C);
 		L->updateNumItems(-1 * C->getNumItems());
 
+		//Remove Customer from Global Shopping Vector
 		removeCustomer(C->getId());
+
 		//Free Memory Allocated to Customer ?
 	};
 	//==================================================
@@ -300,14 +309,14 @@ void Store::printEvent(EventNode<Customer, CheckoutLine> E)
 		printf("NULL ");
 	}
 	else{
-		printf("%d  ",E.get_obj1()->getId());
+		printf("C%d  ",E.get_obj1()->getId());
 	}
 	//===================================
 	if(E.get_obj2()==NULL){
 		printf("NULL ");
 	}
 	else{
-		printf("%d  ",E.get_obj2()->getID());
+		printf("L%d  ",E.get_obj2()->getID());
 	}
 	//===================================
 	switch(E.get_type())
@@ -331,7 +340,7 @@ void Store::printEvent(EventNode<Customer, CheckoutLine> E)
 			break;
 	}
 	//===================================
-	printf("\n");
+	printf("\n\n");
 }
 
 int Store::arrivalSeed = 10;
