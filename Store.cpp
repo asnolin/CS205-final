@@ -71,7 +71,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 			int csTime = calcCashierTime(C->getNumItems());
 
 			//Update Line Variables
-			L->incNumCustomers();
+			L->incNumCustomers(*C);
 			L->updateNumItems(C->getNumItems());
 			L->updateWaitTime(csTime);
 
@@ -86,7 +86,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 
 		if(swTime<chTime & swTime<=abTime)
 		{
-			L->incNumCustomers();
+			L->incNumCustomers(*C);
 			L->updateNumItems(C->getNumItems());
 
 			EventNode<Customer, CheckoutLine> Print4(swTime, C, L, CUSTOMER_CHANGES_LINE);
@@ -99,7 +99,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 
 		if(abTime<swTime & abTime<chTime)
 		{
-			L->incNumCustomers();
+			L->incNumCustomers(*C);
 			L->updateNumItems(C->getNumItems());
 
 			EventNode<Customer, CheckoutLine> Print5(abTime, C, L, CUSTOMER_ABANDONS_LINE);
@@ -117,7 +117,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		Customer *C = E.get_obj1();
 		CheckoutLine *L = E.get_obj2();
 
-		L->decNumCustomers();
+		L->decNumCustomers(*C);
 		L->updateWaitTime(-1 * calcCashierTime(C->getNumItems()));
 		L->updateNumItems(-1 * C->getNumItems());
 
@@ -131,7 +131,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		CheckoutLine *oldL = E.get_obj2();
 		CheckoutLine *newL = chooseLine();
 
-		oldL->decNumCustomers();
+		oldL->decNumCustomers(*C);
 		oldL->updateNumItems(-1 * C->getNumItems());
 
 		int chTime = newL->getWaitTime();
@@ -144,7 +144,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 			int csTime = calcCashierTime(C->getNumItems());
 
 			//Update Line Variables
-			newL->incNumCustomers();
+			newL->incNumCustomers(*C);
 			newL->updateNumItems(C->getNumItems());
 			newL->updateWaitTime(csTime);
 
@@ -159,7 +159,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		}
 		if(swTime<chTime & swTime<=abTime)
 		{
-			newL->incNumCustomers();
+			newL->incNumCustomers(*C);
 			newL->updateNumItems(C->getNumItems());
 
 			EventNode<Customer, CheckoutLine> Print7(swTime, C, newL, CUSTOMER_CHANGES_LINE);
@@ -171,7 +171,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		}
 		if(abTime<swTime & abTime<chTime)
 		{
-			newL->incNumCustomers();
+			newL->incNumCustomers(*C);
 			newL->updateNumItems(C->getNumItems());
 
 			EventNode<Customer, CheckoutLine> Print8(abTime, C, newL, CUSTOMER_ABANDONS_LINE);
@@ -189,7 +189,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		Customer *C = E.get_obj1();
 		CheckoutLine *L = E.get_obj2();
 
-		L->decNumCustomers();
+		L->decNumCustomers(*C);
 		L->updateNumItems(-1 * C->getNumItems());
 
 		removeCustomer(C->getId());
