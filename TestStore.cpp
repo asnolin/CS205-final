@@ -7,26 +7,12 @@ int main()
   Store theStore;
   theStore.setTime(0);
 
-  CheckoutLine L1;
-  theStore.addCheckoutLine(&L1);
-
-  //CheckoutLine L2;
-  //theStore.addCheckoutLine(&L2);
-
-  //CheckoutLine L3;
-  //theStore.addCheckoutLine(&L3);
-
-  CheckoutLine L4;
-  theStore.addCheckoutLine(&L4);
-  L4.setItemLimit(5);
-
-  /*
   int i;
   for(i = 0; i < 10; i++)
   {
-    printf("%f\n", round(drand48()*2));
+    CheckoutLine *L = new CheckoutLine();
+    theStore.addCheckoutLine(L);
   }
-  */
 
   EventNode<Customer,CheckoutLine> E;
 
@@ -42,8 +28,6 @@ int main()
   }
   printf("====================================\n");
   printf("\n");
-  theStore.printQ();
-
 
   /*
   //==============================================
