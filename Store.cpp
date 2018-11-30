@@ -16,6 +16,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 
 	//Print the Status of the CheckoutLines and Customers
 	printLines();
+	printf("Avg Wait Time: %f\n", avgWaitTime);
 	printCusts();
 
 	//Print the Current Event being Processed
@@ -32,6 +33,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 
 		//Calculate how Long the Customer will Shop based on Number of Items
 		int shopTime = calcShoppingTime(aCustomer->getNumItems());
+		aCustomer->setCheckoutLength(calcCashierTime(aCustomer->getNumItems()));
 		//Add Checkout_Ready Event for New Customer
 		EventQ.make_event(Time+shopTime, aCustomer, NULL, CUSTOMER_CHECKOUT_READY);
 
@@ -57,6 +59,8 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		Customer *C = E.get_obj1();
 		//Determine Time that Customer will Abandon Store, This Value Will Not Change
 		C->setAbandonTime(Time);
+		//Track When Customer Starts Waiting to be Checked Out
+		C->setInLineTime(Time);
 
 		//Decide which CheckoutLine the Customer should Join
 		CheckoutLine *L = chooseLine();
@@ -78,8 +82,12 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 
 		//Update CheckoutLine Variables
 		L->decNumCustomers(*C);
-		L->updateWaitTime(-1 * calcCashierTime(C->getNumItems()));
+		L->updateWaitTime(-1 * C->getCheckoutLength());
 		L->updateNumItems(-1 * C->getNumItems());
+
+		WaitTimes.push_back(Time - C->getInLineTime() - C->getCheckoutLength());
+		calcAvgWaitTime();
+
 
 		//Remove Customer from Global Shopping Vector
 		removeCustomer(C->getId());
@@ -116,6 +124,9 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		//Update CheckoutLine Variables for Line that Customer is Leaving
 		L->decNumCustomers(*C);
 		L->updateNumItems(-1 * C->getNumItems());
+
+		WaitTimes.push_back(Time - C->getInLineTime());
+		calcAvgWaitTime();
 
 		//Remove Customer from Global Shopping Vector
 		removeCustomer(C->getId());
@@ -294,6 +305,20 @@ void Store::printEvent(EventNode<Customer, CheckoutLine> E)
 	printf("\n\n");
 }
 
+void Store::calcAvgWaitTime(){
+	int t = 0;
+	int i;
+	for(i = 0; i < WaitTimes.size(); i++)
+	{
+		t += WaitTimes[i];
+	}
+	avgWaitTime = (t / WaitTimes.size());
+}
+
+ float Store::getAvgWaitTime(){
+	 return avgWaitTime;
+ }
+
 void Store::makeDecision(Customer *C, CheckoutLine *L)
 {
 	//Customer Has 3 Options: Stay In Line, Change Lines, Abandon Store
@@ -306,11 +331,11 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 	if(St_Ch_Time<=Ch_Ln_Time & St_Ch_Time<=Ab_Ln_Time) //Customer will Finish Checkout in Current Line
 	{
 		//Update WaitTime of CheckoutLine
-		L->updateWaitTime(calcCashierTime(C->getNumItems()));
+		L->updateWaitTime(C->getCheckoutLength());
 
 		//Time that Customer Finishes Checkout Equals...
 		//Time Waiting in Line + Time Scanning Items + Current Time
-		int FinishTime = St_Ch_Time + calcCashierTime(C->getNumItems());
+		int FinishTime = St_Ch_Time + C->getCheckoutLength();
 		//Add Checkout_Finish Event
 		EventQ.make_event(FinishTime, C, L, CUSTOMER_CHECKOUT_FINISH);
 
@@ -344,12 +369,13 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 	//======================================================================
 }
 
-int Store::arrivalSeed = 5; //10
+int Store::arrivalSeed = 2; //10
 unsigned long int Store::Time = 0;
 
 //no-arg Store constructor
 Store::Store(){
 	Time = 0;
+	avgWaitTime = 0;
 
 }//end store default constructor
 

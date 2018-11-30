@@ -38,6 +38,14 @@ void Customer::setAbandonTime(int t) {
   abandonTime = impFactor + t;
 }
 
+int Customer::getCheckoutLength() const {
+  return checkoutLength;
+}
+
+void Customer::setCheckoutLength(int t) {
+  checkoutLength = t;
+}
+
 double Customer::genRandExp(double beta) const{
   double u, x;
   u = drand48();

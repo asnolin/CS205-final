@@ -5,6 +5,7 @@ class Customer{
   private:
     int id;
     int numItems;
+    int checkoutLength;
     int impFactor;
     int oppFactor;
     int inStoreTime;
@@ -29,13 +30,16 @@ class Customer{
     int getOppFactor() const;
 
     int getInStoreTime() const;
-    int getInLineTime() const;
 
     int getAbandonTime() const;
     void setAbandonTime(int t);
 
+    int getInLineTime() const;
     void setInLineTime(int t);
 
+    int getCheckoutLength() const;
+    void setCheckoutLength(int t);
+;
     Customer(int arriveTime);
 };
 

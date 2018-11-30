@@ -66,6 +66,10 @@ class Store{
 
 		vector<CheckoutLine*> Lines;
 
+		vector<int> WaitTimes;
+
+		float avgWaitTime;
+
 		EventQueue<Customer, CheckoutLine> EventQ;
 
 		void addCheckoutLine(CheckoutLine *L);
@@ -74,6 +78,9 @@ class Store{
 
 		int calcCashierTime(int numItems);
 		int calcShoppingTime(int numItems);
+
+		void calcAvgWaitTime();
+		float getAvgWaitTime();
 
 		double genRandExp(double beta) const;
 
