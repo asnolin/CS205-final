@@ -142,18 +142,47 @@ void Store::addCheckoutLine(CheckoutLine *L){
 }
 
 CheckoutLine* Store::chooseLine(){
-	CheckoutLine *currentLine = Lines.front();
 
+	CheckoutLine *L = Lines.front();
 	int i;
-	for(i = 0; i < Lines.size(); i++)
+
+	switch(Strat)
 	{
-		if(Lines[i]->getNumItems() < currentLine->getNumItems())
-		{
-			currentLine = Lines[i];
-		}
+		case NUM_ITEMS :
+			for(i = 0; i < Lines.size(); i++)
+			{
+				if(Lines[i]->getNumItems() < L->getNumItems())
+				{
+					L = Lines[i];
+				}
+			}
+			break;
+
+		case NUM_CUSTOMERS :
+			for(i = 0; i < Lines.size(); i++)
+			{
+				if(Lines[i]->getNumCustomers() < L->getNumCustomers())
+				{
+					L = Lines[i];
+				}
+			}
+			break;
+
+		case WAIT_TIME :
+			for(i = 0; i < Lines.size(); i++)
+			{
+				if(Lines[i]->getWaitTime() < L->getWaitTime())
+				{
+					L = Lines[i];
+				}
+			}
+			break;
+
+		case RANDOM :
+			L = Lines[genRandUni(0, Lines.size()-1)];
 	}
 
-	return(currentLine);
+	return(L);
 }
 
 void Store::printLines()
@@ -216,6 +245,16 @@ double Store::genRandExp(double beta) const{
   u = drand48();
   x = -beta * log(1.0 - u); // this is the natural log
   return(x);
+}
+
+double Store::genRandUni(int low, int high) const
+{
+	double r1, r2;
+  int rtnval;
+  r1 = drand48();
+	r2 = (1 + high - low) * r1;
+	rtnval = low + floor(r2);
+	return(rtnval);
 }
 
 void Store::printQ()
@@ -369,13 +408,14 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 	//======================================================================
 }
 
-int Store::arrivalSeed = 2; //10
+int Store::arrivalSeed = 5; //10
 unsigned long int Store::Time = 0;
 
 //no-arg Store constructor
 Store::Store(){
 	Time = 0;
 	avgWaitTime = 0;
+	Strat = RANDOM;
 
 }//end store default constructor
 

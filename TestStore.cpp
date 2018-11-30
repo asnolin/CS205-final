@@ -17,11 +17,17 @@ int main()
   L2.updateNumItems(0);
   L2.updateWaitTime(0);
 
-  /*
   CheckoutLine L3;
   theStore.addCheckoutLine(&L3);
   L3.updateNumItems(0);
   L3.updateWaitTime(0);
+
+  /*
+  int i;
+  for(i = 0; i < 10; i++)
+  {
+    printf("%f\n", round(drand48()*2));
+  }
   */
 
   EventNode<Customer,CheckoutLine> E;
@@ -39,6 +45,8 @@ int main()
   printf("====================================\n");
   printf("\n");
   theStore.printQ();
+
+
   /*
   //==============================================
   //TESTING CUSTOMER FINISHES CHECKOUT

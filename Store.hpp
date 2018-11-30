@@ -48,7 +48,8 @@ class Store{
 		//requires the cashiers to hold the number of customers ahaead of them
 		//simple imp might be to hold number of items, that way customers would never switch because they
 		//would always be in the fastest line
-		//
+
+		enum QueueStrategy {NUM_ITEMS, NUM_CUSTOMERS, WAIT_TIME, RANDOM};
 
 		//eventQ is the priority queue for Event structs sorted by time
 		// priority_queue<Event> EventQ;
@@ -61,6 +62,8 @@ class Store{
 		Store();
 		//destructor
 		~Store();
+
+		QueueStrategy Strat;
 
 		vector<Customer> Shopping;
 
@@ -83,6 +86,7 @@ class Store{
 		float getAvgWaitTime();
 
 		double genRandExp(double beta) const;
+		double genRandUni(int low, int high) const;
 
 		CheckoutLine* chooseLine();
 		void printLines();
