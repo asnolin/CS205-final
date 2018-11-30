@@ -86,6 +86,8 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		L->updateNumItems(-1 * C->getNumItems());
 
 		WaitTimes.push_back(Time - C->getInLineTime() - C->getCheckoutLength());
+		printf("Customer Wait Time %lu\n",Time - C->getInLineTime() - C->getCheckoutLength());
+		printf("Wait Time Array Length: %lu\n", WaitTimes.size());
 		calcAvgWaitTime();
 
 
@@ -126,6 +128,8 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		L->updateNumItems(-1 * C->getNumItems());
 
 		WaitTimes.push_back(Time - C->getInLineTime());
+		printf("Customer Wait Time %lu\n",Time - C->getInLineTime());
+		printf("Wait Time Array Length: %lu\n", WaitTimes.size());
 		calcAvgWaitTime();
 
 		//Remove Customer from Global Shopping Vector
@@ -351,7 +355,7 @@ void Store::calcAvgWaitTime(){
 	{
 		t += WaitTimes[i];
 	}
-	avgWaitTime = (t / WaitTimes.size());
+	avgWaitTime = (double)t / (double)WaitTimes.size();
 }
 
  float Store::getAvgWaitTime(){

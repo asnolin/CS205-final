@@ -71,7 +71,7 @@ class Store{
 
 		vector<int> WaitTimes;
 
-		float avgWaitTime;
+		double avgWaitTime;
 
 		EventQueue<Customer, CheckoutLine> EventQ;
 
