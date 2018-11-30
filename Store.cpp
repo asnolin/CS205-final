@@ -16,7 +16,8 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 
 	//Print the Status of the CheckoutLines and Customers
 	printLines();
-	printf("Avg Wait Time: %f\n", avgWaitTime);
+	printf("Avg Wait Time: %-4.2f\n", avgWaitTime);
+	printf("Checkout Rate: %-4.2f\n", CheckoutRate);
 	printCusts();
 
 	//Print the Current Event being Processed
@@ -90,6 +91,8 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		printf("Wait Time Array Length: %lu\n", WaitTimes.size());
 		calcAvgWaitTime();
 
+		NumCheckouts = NumCheckouts + 1;
+		calcCheckoutRate();
 
 		//Remove Customer from Global Shopping Vector
 		removeCustomer(C->getId());
@@ -352,6 +355,16 @@ void Store::printEvent(EventNode<Customer, CheckoutLine> E)
 	printf("\n\n");
 }
 
+void Store::calcCheckoutRate()
+{
+	CheckoutRate = (double) NumCheckouts / (double)((double)Time/60);
+}
+
+double Store::getCheckoutRate()
+{
+	return CheckoutRate;
+}
+
 void Store::calcAvgWaitTime(){
 	int t = 0;
 	int i;
@@ -362,7 +375,7 @@ void Store::calcAvgWaitTime(){
 	avgWaitTime = (double)t / (double)WaitTimes.size();
 }
 
- float Store::getAvgWaitTime(){
+ double Store::getAvgWaitTime(){
 	 return avgWaitTime;
  }
 
@@ -424,7 +437,7 @@ Store::Store(){
 	Time = 0;
 	avgWaitTime = 0;
 	Strat = RANDOM;
-
+	NumCheckouts = 0;
 }//end store default constructor
 
 //Store destructor
