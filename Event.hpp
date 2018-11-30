@@ -8,13 +8,13 @@
  * 
  * No need for an Event.cpp because both are class templates
  *
- * TODO
- * implement exceptions?
  */
 
 #include<memory>
 #include<queue>
 #include<vector>
+#include<string>
+#include<sstream>
 using namespace std;
 
 //TODO
@@ -112,15 +112,35 @@ eventType EventNode<U, V>::get_type(){
 
 
 
+
 template<class T, class S>
 class EventQueue{
 	private:
 	//priority queue that contains EventNodes
-	priority_queue<EventNode<T, S>, std::vector<EventNode<T, S> >, std::greater<EventNode<T, S> > > eventQ;	
+	//priority_queue<EventNode<T, S>, std::deque<EventNode<T, S> >, std::greater<EventNode<T, S> > > eventQ;	
 
 	//minimum time an event can be and current time for the system
 	unsigned long int currentTime;	
+	
+	/* nested class is derived from a priority_queue, but has a method to return a pointer to the container
+	 * Found the container variable, c,  in the bits/stl_queue.h file which defines the priority_queue
+	 * this allows for printing of the event queue
+	 */
+	
+	class MyPQ : public std::priority_queue<EventNode<T, S>, 
+	std::deque<EventNode<T, S> >, std::greater<EventNode<T, S> > >{
 
+		public:
+		deque<EventNode<T, S> > get_container() const{
+			deque<EventNode<T, S> > copy = deque<EventNode<T, S> >(priority_queue<EventNode<T, S>, std::deque<EventNode<T, S> >, std::greater<EventNode<T, S> > >::c);
+			return copy;
+		}//end get_container
+				
+
+	};//end MyPQ class
+
+	//instance of the MyPQ class
+	MyPQ eventQ;
 
 	public:
 	//no-arg construtctor
@@ -147,6 +167,9 @@ class EventQueue{
 
 	//get pointer to obj2 of head
 	S* get_ptr2();
+	
+	//print the event queue
+	string to_str();
 
 };//end EventQueue
 
@@ -189,9 +212,13 @@ EventNode<T, S> EventQueue<T, S>::pop() {
 	}
 }//end pop()
 
+
+//TODO
+//does this need to delete the EventNode?
 template<class T, class S>
 void EventQueue<T, S>::advance_head(){
 	if(!eventQ.empty()){
+		//delete the eventNode here?
 		//pop head element and update currentTime
 		eventQ.pop();
 		EventNode<T, S> node = eventQ.top();
@@ -246,3 +273,25 @@ S* EventQueue<T, S>::get_ptr2(){
 		return node.get_obj2();
 	}
 }//end get_obj2
+
+
+//TODO
+//can I copy the eventQ to cpyQueue?
+//if not, I need to pop from eventQ and then emplace nodes back in 
+////print_queue
+template<class T, class S>
+string EventQueue<T, S>::to_str(){
+	const deque<EventNode<T, S> > myDeque = eventQ.get_container();
+	string str;
+	str =  "the number of items in the event queue is: ";
+	int i = 0;
+	for(auto itr = myDeque.cbegin(); itr != myDeque.cend(); ++itr){
+		++i;
+	}
+	ostringstream number;
+	number << i;
+	str += number.str();
+	return str;
+
+}//end print_queue
+

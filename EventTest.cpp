@@ -128,5 +128,11 @@ int main(int argc, char* argv[]){
 	eventQueue.advance_head();
 	cout << "head was advanced"<<endl;
 	cout << "The third node's time is: "<< eventQueue.get_current_time() <<" which should be 10" << endl;
+
+
+	cout << "Testing the print function" << endl;
+	cout << eventQueue.to_str() << endl;
+	eventQueue.advance_head();
+	cout << eventQueue.to_str() << endl;
 	return 0;
 }//end main
