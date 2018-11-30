@@ -63,7 +63,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		C->setInLineTime(Time);
 
 		//Decide which CheckoutLine the Customer should Join
-		CheckoutLine *L = chooseLine();
+		CheckoutLine *L = chooseLine(C->getNumItems());
 		//Update CheckoutLine Variables
 		L->incNumCustomers(*C);
 		L->updateNumItems(C->getNumItems());
@@ -104,7 +104,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		//Pull CheckoutLine Pointer from Event
 		CheckoutLine *oldL = E.get_obj2();
 		//Decide which CheckoutLine the Customer should Change To
-		CheckoutLine *newL = chooseLine();
+		CheckoutLine *newL = chooseLine(C->getNumItems());
 
 		//Update CheckoutLine Variables for Line that Customer is Leaving
 		oldL->decNumCustomers(*C);
@@ -145,7 +145,7 @@ void Store::addCheckoutLine(CheckoutLine *L){
 	Lines.push_back(L);
 }
 
-CheckoutLine* Store::chooseLine(){
+CheckoutLine* Store::chooseLine(int Items){
 
 	CheckoutLine *L = Lines.front();
 	int i;
@@ -155,7 +155,7 @@ CheckoutLine* Store::chooseLine(){
 		case NUM_ITEMS :
 			for(i = 0; i < Lines.size(); i++)
 			{
-				if(Lines[i]->getNumItems() < L->getNumItems())
+				if(Lines[i]->getNumItems()<L->getNumItems() & Items<=L->getItemLimit())
 				{
 					L = Lines[i];
 				}
@@ -165,7 +165,7 @@ CheckoutLine* Store::chooseLine(){
 		case NUM_CUSTOMERS :
 			for(i = 0; i < Lines.size(); i++)
 			{
-				if(Lines[i]->getNumCustomers() < L->getNumCustomers())
+				if(Lines[i]->getNumCustomers()<L->getNumCustomers() & Items<=L->getItemLimit())
 				{
 					L = Lines[i];
 				}
@@ -175,7 +175,7 @@ CheckoutLine* Store::chooseLine(){
 		case WAIT_TIME :
 			for(i = 0; i < Lines.size(); i++)
 			{
-				if(Lines[i]->getWaitTime() < L->getWaitTime())
+				if(Lines[i]->getWaitTime()<L->getWaitTime() & Items<=L->getItemLimit())
 				{
 					L = Lines[i];
 				}
@@ -184,6 +184,10 @@ CheckoutLine* Store::chooseLine(){
 
 		case RANDOM :
 			L = Lines[genRandUni(0, Lines.size()-1)];
+			while(Items>L->getItemLimit())
+			{
+				L = Lines[genRandUni(0, Lines.size()-1)];
+			}
 	}
 
 	return(L);

@@ -12,6 +12,7 @@ CheckoutLine::CheckoutLine(){
     WaitTime = 0;
     NumCustomers = 0;
     NumItems = 0;
+    ItemLimit = 100;
 };
 
 int CheckoutLine::getID() const{
@@ -26,6 +27,14 @@ int CheckoutLine::getNumItems() const{
 int CheckoutLine::getWaitTime() const{
     return WaitTime;
 };
+
+int CheckoutLine::getItemLimit() const{
+    return ItemLimit;
+}
+
+void CheckoutLine::setItemLimit(int n){
+    ItemLimit = n;
+}
 
 void CheckoutLine::incNumCustomers(Customer in){
     NumCustomers++;

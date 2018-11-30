@@ -20,6 +20,7 @@ private:
     int NumCustomers;
     int NumItems;
     int WaitTime;
+    int ItemLimit;
 
     static int idSeed;
 public:
@@ -29,12 +30,15 @@ public:
     int getNumCustomers() const;
     int getNumItems() const;
     int getWaitTime() const;
+    int getItemLimit() const;
 
     //setter
     //void setID(int ID);
     //void setNumCustomers(int NumCustomers);
     //void setNumItems(int NumItems);
     //void setWaitTime(int WaitTime);
+
+    void setItemLimit(int n);
 
     void incNumCustomers(Customer in);
     void decNumCustomers(Customer out);

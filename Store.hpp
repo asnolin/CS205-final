@@ -88,7 +88,7 @@ class Store{
 		double genRandExp(double beta) const;
 		double genRandUni(int low, int high) const;
 
-		CheckoutLine* chooseLine();
+		CheckoutLine* chooseLine(int Items);
 		void printLines();
 		void printCusts();
 

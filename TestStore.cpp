@@ -9,18 +9,16 @@ int main()
 
   CheckoutLine L1;
   theStore.addCheckoutLine(&L1);
-  L1.updateNumItems(0);
-  L1.updateWaitTime(0);
 
-  CheckoutLine L2;
-  theStore.addCheckoutLine(&L2);
-  L2.updateNumItems(0);
-  L2.updateWaitTime(0);
+  //CheckoutLine L2;
+  //theStore.addCheckoutLine(&L2);
 
-  CheckoutLine L3;
-  theStore.addCheckoutLine(&L3);
-  L3.updateNumItems(0);
-  L3.updateWaitTime(0);
+  //CheckoutLine L3;
+  //theStore.addCheckoutLine(&L3);
+
+  CheckoutLine L4;
+  theStore.addCheckoutLine(&L4);
+  L4.setItemLimit(5);
 
   /*
   int i;
