@@ -89,5 +89,8 @@ class Store{
 
 		void printQ();
 		void printEvent(EventNode<Customer, CheckoutLine> E);
+		void printEvent(unsigned long Time, Customer *C, CheckoutLine *L, EventType eT);
+
+		void makeDecision(Customer *C, CheckoutLine *L);
 
 };//end store class

@@ -55,57 +55,16 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 	{
 		//Pull Customer Pointer from Event
 		Customer *C = E.get_obj1();
+		//Determine Time that Customer will Abandon Store, This Value Will Not Change
+		C->setAbandonTime(Time);
+
 		//Decide which CheckoutLine the Customer should Join
 		CheckoutLine *L = chooseLine();
 		//Update CheckoutLine Variables
 		L->incNumCustomers(*C);
 		L->updateNumItems(C->getNumItems());
 
-		//Determine Time that Customer will Abandon Store, This Value Will Not Change
-		C->setAbandonTime(Time);
-
-		//Customer Has 3 Options: Stay In Line, Change Lines, Abandon Store
-		int chTime = L->getWaitTime() + Time; //Time Customer would Start Checkout (Scanning Items)
-		int swTime = C->getOppFactor() + Time; //Time Customer would Switch Lines
-		int abTime = C->getAbandonTime(); //Time Customer would Abandon Store
-
-	  //Create an Event that Corresponds to Lowest of the 3 Times
-		if(chTime<=swTime & chTime<=abTime) //Customer will Finish Checkout in Current Line
-		{
-			//Update WaitTime of CheckoutLine
-			L->updateWaitTime(calcCashierTime(C->getNumItems()));
-
-			//Time that Customer Finishes Checkout Equals...
-			//Time Waiting in Line + Time Scanning Items + Current Time
-			int FinishTime = chTime + calcCashierTime(C->getNumItems()) + Time;
-			//Add Checkout_Finish Event
-			EventQ.make_event(FinishTime, C, L, CUSTOMER_CHECKOUT_FINISH);
-
-			//Create a Checkout_Finish Event and Print It
-			printf("CREATED EVENT\n");
-			EventNode<Customer, CheckoutLine> Print3(FinishTime, C, L, CUSTOMER_CHECKOUT_FINISH);
-			printEvent(Print3);
-		}
-		if(swTime<chTime & swTime<=abTime) //Customer will Switch Checkout Lines
-		{
-			//Add Changes_Line Event
-			EventQ.make_event(swTime, C, L, CUSTOMER_CHANGES_LINE);
-
-			//Create a Changes_Line Event and Print It
-			printf("CREATED EVENT\n");
-			EventNode<Customer, CheckoutLine> Print4(swTime, C, L, CUSTOMER_CHANGES_LINE);
-			printEvent(Print4);
-		}
-		if(abTime<swTime & abTime<chTime) //Customer will Abandon Store
-		{
-			//Create Abandons_Line Event
-			EventQ.make_event(abTime, C, L, CUSTOMER_ABANDONS_LINE);
-
-			//Create a Abandons_Line Event and Print It
-			EventNode<Customer, CheckoutLine> Print5(abTime, C, L, CUSTOMER_ABANDONS_LINE);
-			printf("CREATED EVENT\n");
-			printEvent(Print5);
-		}
+		makeDecision(C, L);
 	}
 	//==================================================
 	else if(E.get_type() == CUSTOMER_CHECKOUT_FINISH)
@@ -144,48 +103,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		newL->incNumCustomers(*C);
 		newL->updateNumItems(C->getNumItems());
 
-		//Customer Has 3 Options: Stay In Line, Change Lines, Abandon Store
-		int chTime = newL->getWaitTime() + Time; //Time Customer would Start Checkout (Scanning Items)
-		int swTime = C->getOppFactor() + Time; //Time Customer would Switch Lines
-		int abTime = C->getAbandonTime(); //Time Customer would Abandon Store
-
-	  //Create an Event that Corresponds to Lowest of the 3 Times
-		if(chTime<=swTime & chTime<=abTime) //Customer will Finish Checkout in Current Line
-		{
-			//Update WaitTime of CheckoutLine
-			newL->updateWaitTime(calcCashierTime(C->getNumItems()));
-
-			//Time that Customer Finishes Checkout Equals...
-			//Time Waiting in Line + Time Scanning Items + Current Time
-			int FinishTime = chTime + calcCashierTime(C->getNumItems()) + Time;
-			//Add Checkout_Finish Event
-			EventQ.make_event(FinishTime, C, newL, CUSTOMER_CHECKOUT_FINISH);
-
-			//Create a Checkout_Finish Event and Print It
-			printf("CREATED EVENT\n");
-			EventNode<Customer, CheckoutLine> Print6(FinishTime, C, newL, CUSTOMER_CHECKOUT_FINISH);
-			printEvent(Print6);
-		}
-		if(swTime<chTime & swTime<=abTime) //Customer will Switch Checkout Lines
-		{
-			//Add Changes_Line Event
-			EventQ.make_event(swTime, C, newL, CUSTOMER_CHANGES_LINE);
-
-			//Create a Changes_Line Event and Print It
-			printf("CREATED EVENT\n");
-			EventNode<Customer, CheckoutLine> Print7(swTime, C, newL, CUSTOMER_CHANGES_LINE);
-			printEvent(Print7);
-		}
-		if(abTime<swTime & abTime<chTime) //Customer will Abandon Store
-		{
-			//Create Abandons_Line Event
-			EventQ.make_event(abTime, C, newL, CUSTOMER_ABANDONS_LINE);
-
-			//Create a Abandons_Line Event and Print It
-			EventNode<Customer, CheckoutLine> Print8(abTime, C, newL, CUSTOMER_ABANDONS_LINE);
-			printf("CREATED EVENT\n");
-			printEvent(Print8);
-		}
+		makeDecision(C, newL);
 	}
 	//==================================================
 	else if(E.get_type() == CUSTOMER_ABANDONS_LINE)
@@ -300,6 +218,44 @@ void Store::printQ()
 	}
 }
 
+void Store::printEvent(unsigned long Time, Customer *C, CheckoutLine *L, EventType eT)
+{
+	//===================================
+	printf("< %3lu  ", Time);
+	//===================================
+	if(C==NULL){
+		printf("NULL  ");
+	}
+	else{
+		printf("C%-3d  ",C->getId());
+	}
+	//===================================
+	if(L==NULL){
+		printf("NULL  ");
+	}
+	else{
+		printf("L%-3d  ",L->getID());
+	}
+	//===================================
+	switch(eT)
+	{
+		case 0: printf("CUSTOMER_ARRIVES >");
+			break;
+		case 1: printf("CUSTOMER_CHECKOUT_READY >");
+			break;
+		case 2: printf("CUSTOMER_CHECKOUT_FINISH >");
+			break;
+		case 3: printf("CUSTOMER_CHANGES_LINE >");
+			break;
+		case 4: printf("CUSTOMER_ABANDONS_LINE >");
+			break;
+		case 5: printf("VOID_EVENT >");
+			break;
+	}
+	//===================================
+	printf("\n\n");
+}
+
 void Store::printEvent(EventNode<Customer, CheckoutLine> E)
 {
 	//===================================
@@ -323,24 +279,69 @@ void Store::printEvent(EventNode<Customer, CheckoutLine> E)
 	{
 		case 0: printf("CUSTOMER_ARRIVES >");
 			break;
-
 		case 1: printf("CUSTOMER_CHECKOUT_READY >");
 			break;
-
 		case 2: printf("CUSTOMER_CHECKOUT_FINISH >");
 			break;
-
 		case 3: printf("CUSTOMER_CHANGES_LINE >");
 			break;
-
 		case 4: printf("CUSTOMER_ABANDONS_LINE >");
 			break;
-
 		case 5: printf("VOID_EVENT >");
 			break;
 	}
 	//===================================
 	printf("\n\n");
+}
+
+void Store::makeDecision(Customer *C, CheckoutLine *L)
+{
+	//Customer Has 3 Options: Stay In Line, Change Lines, Abandon Store
+	int St_Ch_Time = L->getWaitTime()  + Time; //Time Customer would Start Checkout (Scanning Items)
+	int Ch_Ln_Time = C->getOppFactor() + Time; //Time Customer would Switch Lines
+	int Ab_Ln_Time = C->getAbandonTime(); //Time Customer would Abandon Store
+
+	//Create an Event that Corresponds to Lowest of the 3 Times
+	//======================================================================
+	if(St_Ch_Time<=Ch_Ln_Time & St_Ch_Time<=Ab_Ln_Time) //Customer will Finish Checkout in Current Line
+	{
+		//Update WaitTime of CheckoutLine
+		L->updateWaitTime(calcCashierTime(C->getNumItems()));
+
+		//Time that Customer Finishes Checkout Equals...
+		//Time Waiting in Line + Time Scanning Items + Current Time
+		int FinishTime = St_Ch_Time + calcCashierTime(C->getNumItems());
+		//Add Checkout_Finish Event
+		EventQ.make_event(FinishTime, C, L, CUSTOMER_CHECKOUT_FINISH);
+
+		//Create a Checkout_Finish Event and Print It
+		printf("CREATED EVENT\n");
+		EventNode<Customer, CheckoutLine> Print3(FinishTime, C, L, CUSTOMER_CHECKOUT_FINISH);
+		printEvent(Print3);
+	}
+	//======================================================================
+	if(Ch_Ln_Time<St_Ch_Time & Ch_Ln_Time<=Ab_Ln_Time) //Customer will Switch Checkout Lines
+	{
+		//Add Changes_Line Event
+		EventQ.make_event(Ch_Ln_Time, C, L, CUSTOMER_CHANGES_LINE);
+
+		//Create a Changes_Line Event and Print It
+		printf("CREATED EVENT\n");
+		EventNode<Customer, CheckoutLine> Print4(Ch_Ln_Time, C, L, CUSTOMER_CHANGES_LINE);
+		printEvent(Print4);
+	}
+	//======================================================================
+	if(Ab_Ln_Time<St_Ch_Time & Ab_Ln_Time<Ch_Ln_Time) //Customer will Abandon Store
+	{
+		//Create Abandons_Line Event
+		EventQ.make_event(Ab_Ln_Time, C, L, CUSTOMER_ABANDONS_LINE);
+
+		//Create a Abandons_Line Event and Print It
+		EventNode<Customer, CheckoutLine> Print5(Ab_Ln_Time, C, L, CUSTOMER_ABANDONS_LINE);
+		printf("CREATED EVENT\n");
+		printEvent(Print5);
+	}
+	//======================================================================
 }
 
 int Store::arrivalSeed = 5; //10
