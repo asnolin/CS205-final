@@ -40,74 +40,67 @@ class Store{
 		static unsigned long int Time;
 
 		//seeds customer ids
-		int idSeed;
 		static int arrivalSeed;
-
-		//TODO
-		//change fidget to a number of ticks the customer would wait before switching a line.
-		//requires the cashiers to hold the number of customers ahaead of them
-		//simple imp might be to hold number of items, that way customers would never switch because they
-		//would always be in the fastest line
 
 		enum QueueStrategy {NUM_ITEMS, NUM_CUSTOMERS, WAIT_TIME, RANDOM};
 
-		//eventQ is the priority queue for Event structs sorted by time
-		// priority_queue<Event> EventQ;
-
-		//shopping is the vector where customers will go when they enter the store but are not in line yet
-
 
 	public:
-		//constructor
+
 		Store();
-		//destructor
 		~Store();
 
-		QueueStrategy Strat;
-
-		vector<Customer> Shopping;
-
-		vector<CheckoutLine*> Lines;
-
-		vector<int> WaitTimes;
-
-		double avgWaitTime;
-		double CheckoutRate;
-
-		int NumCheckouts;
-
+		//Event Queue
 		EventQueue<Customer, CheckoutLine> EventQ;
 
-		void addCheckoutLine(CheckoutLine *L);
+		//Vector of Customers
+		vector<Customer> Shopping;
 
+		//Vector of CheckoutLines
+		vector<CheckoutLine*> Lines;
+
+		//Queueing Strategy for Store
+		QueueStrategy Strat;
+
+		//Fields for Store Statistics
+		vector<int> WaitTimes;
+		double AvgWaitTime;
+		int NumCheckouts;
+		double CheckoutRate;
+
+		//==================================================
+
+		//Event Processing Functions
 		void handleEvent(EventNode<Customer,CheckoutLine> E);
+		void makeDecision(Customer *C, CheckoutLine *L);
 
-		int calcCashierTime(int numItems);
-		int calcShoppingTime(int numItems);
-
-		void calcCheckoutRate();
-		double getCheckoutRate();
-
-		void calcAvgWaitTime();
-		double getAvgWaitTime();
-
-		double genRandExp(double beta) const;
-		double genRandUni(int low, int high) const;
-
-		CheckoutLine* chooseLine(int Items);
-		void printLines();
-		void printCusts();
-
-		void removeCustomer(int ID);
-
-		int getTime() const;
+		//Time Functions
+		int getTime();
 		void incTime();
 		void setTime(int t);
 
+		//Customer Functions
+		int genCashTime(int numItems);
+		int genShopTime(int numItems);
+		void removeCustomer(int ID);
+
+		//CheckoutLine Functions
+		void addCheckoutLine(CheckoutLine *L);
+		CheckoutLine* chooseLine(int Items);
+
+		//Store Statistic Functions
+		double getAvgWaitTime();
+		double getCheckoutRate();
+
+		//Printing Functions
 		void printQ();
+		void printCusts();
+		void printLines();
 		void printEvent(EventNode<Customer, CheckoutLine> E);
 		void printEvent(unsigned long Time, Customer *C, CheckoutLine *L, EventType eT);
 
-		void makeDecision(Customer *C, CheckoutLine *L);
+		//Random Number Generation
+		double genRandExp(double beta) const;
+		double genRandUni(int low, int high) const;
 
-};//end store class
+};
