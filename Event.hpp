@@ -27,14 +27,6 @@
 #include<sstream>
 using namespace std;
 
-//TODO
-//would be nice to be able to overwrite this definition from another file
-//#ifdef and #ifndef? 
-//
-//make make_event print the event info to console
-//
-
-
 
 //eventType stores the enumeration of all possible event types the EventNode can be
 enum eventType {CUSTOMER_ARRIVES, CUSTOMER_CHECKOUT_READY, CUSTOMER_CHECKOUT_FINISH, 
@@ -148,22 +140,16 @@ class EventNode{
 template<class T, class S>
 class EventQueue{
 	private:
-	//priority queue that contains EventNodes
-	//priority_queue<EventNode<T, S>, std::deque<EventNode<T, S> >, std::greater<EventNode<T, S> > > eventQ;	
-
 	//minimum time an event can be and current time for the system
 	unsigned long int currentTime;	
 	
-
-
-
-
 	/* nested class inherits from a priority_queue, but has a method to return a pointer to the container
 	 * Found the container variable, c,  in the bits/stl_queue.h file which defines the priority_queue
 	 * this allows for printing of the event queue
 	 */	
 	class MyPQ : public std::priority_queue<EventNode<T, S>, 
-	std::deque<EventNode<T, S> >, std::greater<EventNode<T, S> > >{
+						std::deque<EventNode<T, S> >, 
+						std::greater<EventNode<T, S> > >{
 		
 		public:
 		//creates a copy of the priority queue's container and returns it
@@ -173,9 +159,6 @@ class EventQueue{
 		}//end get_container
 				
 	};//end MyPQ class
-
-
-
 
 
 	//instance of the MyPQ class
@@ -218,11 +201,8 @@ class EventQueue{
 	}//end pop
 
 	//advance head
-	//TODO
-	//does this need to delete EventNode?
 	void advance_head(){	
 		if(!eventQ.empty()){
-			//delete the eventNode here?
 			//pop head element and update currentTime
 			eventQ.pop();
 			EventNode<T, S> node = eventQ.top();
@@ -271,7 +251,9 @@ class EventQueue{
 	}//end get_ptr2
 
 
-
+	bool is_empty(){
+		return eventQ.empty();
+	}//end is_empty
 
 	//print the event queue
 	string to_str(){
