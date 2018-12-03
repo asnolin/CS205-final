@@ -16,7 +16,7 @@ int main()
 
   EventNode<Customer,CheckoutLine> E;
 
-  theStore.EventQ.make_event(0, NULL, NULL, CUSTOMER_ARRIVES);
+  theStore.EventQ.make_event(0, NULL, 0, NULL, 0, CUSTOMER_ARRIVES);
 
   theStore.setTime(E.get_time());
   E = theStore.EventQ.pop();

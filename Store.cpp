@@ -48,7 +48,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		aCustomer->setCheckoutLength(genCashTime(aCustomer->getNumItems()));
 
 		//Add Checkout_Ready Event for New Customer
-		EventQ.make_event(Time+shopTime, aCustomer, NULL, CUSTOMER_CHECKOUT_READY);
+		EventQ.make_event(Time+shopTime, aCustomer, aCustomer->getId(), NULL, 0, CUSTOMER_CHECKOUT_READY);
 
 		//Create a Checkout_Ready Event and Print It
 		printf("CREATED EVENT\n");
@@ -57,7 +57,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		//Calculate when Next Customer Arrives
 		int nextArriveTime = Time + genRandExp(arrivalSeed);
 		//Add Customer_Arrives Event
-		EventQ.make_event(nextArriveTime, NULL, NULL, CUSTOMER_ARRIVES);
+		EventQ.make_event(nextArriveTime, NULL, 0, NULL, 0, CUSTOMER_ARRIVES);
 
 		//Create a Customer_Arrives Event and Print It
 		printf("CREATED EVENT\n");
@@ -168,7 +168,7 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 		//Time Waiting in Line + Time Scanning Items + Current Time
 		int FinishTime = StTime + C->getCheckoutLength();
 		//Add Checkout_Finish Event
-		EventQ.make_event(FinishTime, C, L, CUSTOMER_CHECKOUT_FINISH);
+		EventQ.make_event(FinishTime, C, C->getId(), L, L->getID(), CUSTOMER_CHECKOUT_FINISH);
 
 		//Print Event
 		printf("CREATED EVENT\n");
@@ -178,7 +178,7 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 	if(ChTime < StTime  &  ChTime <= AbTime) //Customer will Switch Checkout Lines
 	{
 		//Add Changes_Line Event
-		EventQ.make_event(ChTime, C, L, CUSTOMER_CHANGES_LINE);
+		EventQ.make_event(ChTime, C, C->getId(), L, L->getID(), CUSTOMER_CHANGES_LINE);
 
 		//Print Event
 		printf("CREATED EVENT\n");
@@ -188,7 +188,7 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 	if(AbTime < StTime  &  AbTime < ChTime) //Customer will Abandon Store
 	{
 		//Create Abandons_Line Event
-		EventQ.make_event(AbTime, C, L, CUSTOMER_ABANDONS_LINE);
+		EventQ.make_event(AbTime, C, C->getId(), L, L->getID(), CUSTOMER_ABANDONS_LINE);
 
 		//Print Event
 		printf("CREATED EVENT\n");
@@ -344,7 +344,7 @@ void Store::printLines()
 	}
 }
 
-void Store::printEvent(unsigned long Time, Customer *C, CheckoutLine *L, EventType eT)
+void Store::printEvent(unsigned long Time, Customer *C, CheckoutLine *L, eventType eT)
 {
 	//===================================
 	printf("< %3lu  ", Time);
