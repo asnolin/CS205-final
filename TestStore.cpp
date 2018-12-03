@@ -8,7 +8,7 @@ int main()
   theStore.setTime(0);
 
   int i;
-  for(i = 0; i < 10; i++)
+  for(i = 0; i < 3; i++)
   {
     CheckoutLine *L = new CheckoutLine();
     theStore.addCheckoutLine(L);
