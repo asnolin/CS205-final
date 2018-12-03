@@ -97,7 +97,7 @@ class Store{
 		void printCusts();
 		void printLines();
 		void printEvent(EventNode<Customer, CheckoutLine> E);
-		void printEvent(unsigned long Time, Customer *C, CheckoutLine *L, EventType eT);
+		void printEvent(unsigned long Time, Customer *C, CheckoutLine *L, eventType eT);
 
 		//Random Number Generation
 		double genRandExp(double beta) const;
