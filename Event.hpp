@@ -200,6 +200,9 @@ class EventQueue{
 		}
 	}//end pop
 
+	/*
+	 * unused functions
+	 *
 	//advance head
 	void advance_head(){	
 		if(!eventQ.empty()){
@@ -250,6 +253,7 @@ class EventQueue{
 		}
 	}//end get_ptr2
 
+	*/
 
 	bool is_empty(){
 		return eventQ.empty();
