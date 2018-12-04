@@ -3,7 +3,7 @@
 //
 
 #include <cmath>
-#include "Shape.h"
+#include "shape.h"
 
 Shape::Shape() {
 }
