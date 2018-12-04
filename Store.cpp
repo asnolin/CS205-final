@@ -1,4 +1,5 @@
 #include "Store.hpp"
+#include <iostream>
 
 //====================================================================================================
 
@@ -24,6 +25,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 {
 	//Print The Current Time
 	printf("========================= %lu =========================\n\n", Time);
+	cout << EventQ.to_str() << endl;
 
 	//Print the Status of the CheckoutLines and Customers
 	printLines();
