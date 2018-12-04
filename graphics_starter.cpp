@@ -1,7 +1,11 @@
-#include "graphics.h"
 #include "shape.h"
-#include "Customer.hpp"
-#include <string>
+#include "Store.hpp"
+#include <string.h>
+#include <GL/glut.h>
+#include <GL/glui.h>
+#include <GL/glu.h>
+#include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -10,6 +14,7 @@ string int_to_string(int i);
 //variables
 GLdouble width, height;
 int wd;
+int   numOfLines = 3;
 Rectangles r1(980,150,{1,1,1},{10,10});
 Rectangles r2(270,150,{1,1,1},{1000,10});
 Rectangles r3(980,600,{1,1,1},{10,170});
@@ -17,9 +22,41 @@ Rectangles r4(270,600,{1,1,1},{1000,170});
 Customer c1(2);
 string c1Id = int_to_string(c1.getId());
 
+Store theStore;
+EventNode<Customer, CheckoutLine> E;
+
+void myGlutIdle()
+{
+  /* According to the GLUT specification, the current window is
+     undefined during an idle callback.  So we need to explicitly change
+     it if necessary */
+  if ( glutGetWindow() != wd )
+    glutSetWindow(wd);
+
+  glutPostRedisplay();
+}
+
+
 void init() {
     width = 1280;
     height = 780;
+    srand48((long) time(NULL));
+    theStore.setTime(0);
+
+    int i;
+    for(i = 0; i < 10; i++)
+    {
+      CheckoutLine *L = new CheckoutLine();
+      theStore.addCheckoutLine(L);
+    }
+
+    EventNode<Customer,CheckoutLine> E;
+
+    theStore.EventQ.make_event(0, NULL, 0 , NULL,0, CUSTOMER_ARRIVES);
+
+    // theStore.setTime(E.get_time());
+    // E = theStore.EventQ.pop();
+
 }
 
 /* Initialize OpenGL Graphics */
@@ -109,6 +146,18 @@ void display() {
     for (int i = 0; i < c1Id.length(); ++i) {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c1Id[i]);
     }
+    for (int i = 1; i<numOfLines+1; ++i){
+      int newY =45*i;
+      std::string lineTxt = "Customer line #" + std::to_string(i) + ": " + std::to_string(theStore.Lines[i]->getNumItems());
+      glColor3f(0, 0, 0);
+      glRasterPos2i(50, (240 + newY));
+      for (int i = 0; i < lineTxt.length(); ++i) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, lineTxt[i]);
+      }
+    }
+    E = theStore.EventQ.pop();
+    theStore.setTime(E.get_time());
+    theStore.handleEvent(E);
     glFlush();  // Render now
 }
 
@@ -161,7 +210,7 @@ void mouse(int button, int state, int x, int y) {
 void timer(int dummy) {
 
     glutPostRedisplay();
-    glutTimerFunc(30, timer, dummy);
+    glutTimerFunc(10, timer, dummy);
 }
 
 /* Main function: GLUT runs as a console application starting at main()  */
@@ -200,6 +249,19 @@ int main(int argc, char** argv) {
     // handles timer
     glutTimerFunc(0, timer, 0);
 
+    /****************************************/
+    /*         Here's the GLUI code         */
+    /****************************************/
+
+    GLUI *glui = GLUI_Master.create_glui( "GLUI");
+    GLUI_Spinner *spin = glui -> add_spinner("Number of Lines:", GLUI_SPINNER_INT,&numOfLines );
+    spin->set_int_limits( 1, 10 );
+    // spin->set_w(1000);
+
+    glui->set_main_gfx_window( wd );
+
+    /* We register the idle callmain_windowback with GLUI, *not* with GLUT */
+    GLUI_Master.set_glutIdleFunc( myGlutIdle );
     // Enter the event-processing loop
     glutMainLoop();
     return 0;

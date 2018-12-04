@@ -1,11 +1,11 @@
 /*
  * Event.hpp
- * 
+ *
  * EventNode<T> and EventQueue<T> are class templates
  *
  * for a class T, an EventNode<T> contains a pointer to an object of that class
  * and EventQueue<T> produces EventNode<T> object for its pop() function
- * 
+ *
  * No need for an Event.cpp because both are class templates
  *
  */
@@ -19,7 +19,7 @@
 //becuase I get a "passing const value_type as 'this' argument discared qualifiers
 //eventQ.top() is a const reference to an eventNode
 //I can do EventNode<T, S> node = eventQ.top();
-//If this is possible, would it result in a speedup 
+//If this is possible, would it result in a speedup
 #include<memory>
 #include<queue>
 #include<vector>
@@ -29,12 +29,12 @@ using namespace std;
 
 
 //eventType stores the enumeration of all possible event types the EventNode can be
-enum eventType {CUSTOMER_ARRIVES, CUSTOMER_CHECKOUT_READY, CUSTOMER_CHECKOUT_FINISH, 
+enum eventType {CUSTOMER_ARRIVES, CUSTOMER_CHECKOUT_READY, CUSTOMER_CHECKOUT_FINISH,
 		CUSTOMER_CHANGES_LINE, CUSTOMER_ABANDONS_LINE, VOID_EVENT};
 
-	
+
 		//nested struct EventNode
-template<class U, class V>	
+template<class U, class V>
 class EventNode{
 	private:
 	unsigned long int time; //time that event will occur at
@@ -54,9 +54,9 @@ class EventNode{
 		id2 = 0;
 		type = VOID_EVENT;
 	}//end no-arg consturctor
-	
+
 	//constructor
-	EventNode(unsigned long int inTime, U *inObj1, int inId1, V *inObj2, int inId2, eventType inType){	
+	EventNode(unsigned long int inTime, U *inObj1, int inId1, V *inObj2, int inId2, eventType inType){
 		time = inTime;
 		obj1 = inObj1;
 		id1 = inId1;
@@ -100,7 +100,7 @@ class EventNode{
 	eventType get_type(){
 		return type;
 	}//end get_type
-	
+
 
 	//to-string function
 	string to_str(){
@@ -129,7 +129,7 @@ class EventNode{
 		stream << "\n";
 		return stream.str();
 	}//end to_str
-		
+
 };//end EventNode
 
 
@@ -141,35 +141,35 @@ template<class T, class S>
 class EventQueue{
 	private:
 	//minimum time an event can be and current time for the system
-	unsigned long int currentTime;	
-	
+	unsigned long int currentTime;
+
 	/* nested class inherits from a priority_queue, but has a method to return a pointer to the container
 	 * Found the container variable, c,  in the bits/stl_queue.h file which defines the priority_queue
 	 * this allows for printing of the event queue
-	 */	
-	class MyPQ : public std::priority_queue<EventNode<T, S>, 
-						std::deque<EventNode<T, S> >, 
+	 */
+	class MyPQ : public std::priority_queue<EventNode<T, S>,
+						std::deque<EventNode<T, S> >,
 						std::greater<EventNode<T, S> > >{
-		
+
 		public:
 		//creates a copy of the priority queue's container and returns it
 		deque<EventNode<T, S> > get_container() const{
 			deque<EventNode<T, S> > copy = deque<EventNode<T, S> >(priority_queue<EventNode<T, S>, std::deque<EventNode<T, S> >, std::greater<EventNode<T, S> > >::c);
 			return copy;
 		}//end get_container
-				
+
 	};//end MyPQ class
 
 
 	//instance of the MyPQ class
 	MyPQ eventQ;
-	
+
 	public:
 	//no-arg construtctor
 	EventQueue(){
 		currentTime = 0;
 	}//end no-arg constructor
-	
+
 	//creates a new EventNode of class T and adds it to the pq
 	//returns true when successful
 	bool make_event(unsigned long int inT, T *inObj1, int inId1, S *inObj2, int inId2,  eventType inType){
@@ -186,7 +186,7 @@ class EventQueue{
 	}//end make_event
 
 
-	//removes head EventNode and returns a copy of it	
+	//removes head EventNode and returns a copy of it
 	EventNode<T, S> pop(){
 		if(eventQ.empty()){
 			throw std::runtime_error("empty eventQ");
@@ -204,7 +204,7 @@ class EventQueue{
 	 * unused functions
 	 *
 	//advance head
-	void advance_head(){	
+	void advance_head(){
 		if(!eventQ.empty()){
 			//pop head element and update currentTime
 			eventQ.pop();
