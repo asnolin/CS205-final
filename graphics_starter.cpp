@@ -23,8 +23,12 @@ Rectangles r2(270,150,(color){1,1,1},(point){1000,10});
 Rectangles r3(980,600,(color){1,1,1},(point){10,170});
 Rectangles r4(270,600,(color){1,1,1},(point){1000,170});
 
+Rectangles Start(50,50,(color){0,200,0},(point){400,600});
+
 Store theStore;
 EventNode<Customer, CheckoutLine> E;
+
+bool Run = false;
 
 void myGlutIdle()
 {
@@ -110,6 +114,7 @@ void display() {
     r2.draw();
     r3.draw();
     r4.draw();
+    Start.draw();
 
     //set color to black
     glColor3f(0, 0, 0);
@@ -176,11 +181,13 @@ void display() {
       }
     }
 
+    if(Run)
+    {
+      E = theStore.EventQ.pop();
+      theStore.setTime(E.get_time());
+      theStore.handleEvent(E);
+    }
 
-
-    E = theStore.EventQ.pop();
-    theStore.setTime(E.get_time());
-    theStore.handleEvent(E);
     glFlush();  // Render now
     //std::this_thread::sleep_for (std::chrono::seconds(1));
 }
@@ -226,6 +233,10 @@ void cursor(int x, int y) {
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
 
+    if(button==GLUT_LEFT_BUTTON & Start.pointOverlap(x,y))
+    {
+      Run = true;
+    }
 
 
     glutPostRedisplay();
