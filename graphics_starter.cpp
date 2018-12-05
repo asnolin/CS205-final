@@ -1,11 +1,14 @@
 #include "shape.h"
 #include "Store.hpp"
 #include <string.h>
-#include <GL/glut.h>
-#include <GL/glui.h>
-#include <GL/glu.h>
+#include <GLUT/glut.h>
+//#include <GL/glui.h>
+//#include <GL/glu.h>
 #include <vector>
 #include <iostream>
+
+#include <thread>         // std::this_thread::sleep_for
+#include <chrono>         // std::chrono::seconds
 
 using namespace std;
 
@@ -15,12 +18,10 @@ string int_to_string(int i);
 GLdouble width, height;
 int wd;
 int   numOfLines = 3;
-Rectangles r1(980,150,{1,1,1},{10,10});
-Rectangles r2(270,150,{1,1,1},{1000,10});
-Rectangles r3(980,600,{1,1,1},{10,170});
-Rectangles r4(270,600,{1,1,1},{1000,170});
-Customer c1(2);
-string c1Id = int_to_string(c1.getId());
+Rectangles r1(980,150,(color){1,1,1},(point){10,10});
+Rectangles r2(270,150,(color){1,1,1},(point){1000,10});
+Rectangles r3(980,600,(color){1,1,1},(point){10,170});
+Rectangles r4(270,600,(color){1,1,1},(point){1000,170});
 
 Store theStore;
 EventNode<Customer, CheckoutLine> E;
@@ -44,7 +45,7 @@ void init() {
     theStore.setTime(0);
 
     int i;
-    for(i = 0; i < 10; i++)
+    for(i = 0; i < 4; i++)
     {
       CheckoutLine *L = new CheckoutLine();
       theStore.addCheckoutLine(L);
@@ -87,10 +88,10 @@ void display() {
      */
     //draw string
 
-    string time = "TIME";
+    string time = "- " + to_string(theStore.getTime()) + " -";
     string meanTimeInStore = "Mean Time-In-Store |";
     string meanWaitTime = "Mean Waiting Time";
-    string eventQtitle = "Event Quene";
+    string eventQtitle = "Event Queue";
     string storeTitle = "Grocery Store";
     string totalNumberofShopper = "Total Number of Shoppers";
     string chekcoutLine1 = "Checkout Line #1";
@@ -118,7 +119,7 @@ void display() {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, time[i]);
     }
     // set for event queue title
-    glRasterPos2i(1070, 50);
+    glRasterPos2i(1070, 90);
     for (int i = 0; i < eventQtitle.length(); ++i) {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, eventQtitle[i]);
     }
@@ -142,23 +143,46 @@ void display() {
     for (int i = 0; i < totalNumberofShopper.length(); ++i) {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, totalNumberofShopper[i]);
     }
-    glRasterPos2i(375, 240);
-    for (int i = 0; i < c1Id.length(); ++i) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c1Id[i]);
-    }
-    for (int i = 1; i<numOfLines+1; ++i){
+    for (int i = 0; i<theStore.Lines.size(); ++i)
+    {
       int newY =45*i;
-      std::string lineTxt = "Customer line #" + std::to_string(i) + ": " + std::to_string(theStore.Lines[i]->getNumItems());
+      std::string lineTxt = "Customer line #" + std::to_string(theStore.Lines[i]->getID()) + ": ";
       glColor3f(0, 0, 0);
       glRasterPos2i(50, (240 + newY));
-      for (int i = 0; i < lineTxt.length(); ++i) {
-          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, lineTxt[i]);
+      for (int j = 0; j < lineTxt.length(); ++j)
+      {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, lineTxt[j]);
+      }
+
+      for (int k = 0; k<theStore.Lines[i]->customerLine.size(); ++k)
+      {
+        glRasterPos2i(200+((k+1)*50), (240 + newY));
+        string nmTimes = std::to_string(theStore.Lines[i]->customerLine[k].getNumItems());
+        for (int l = 0; l < lineTxt.length(); ++l)
+        {
+            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, nmTimes[l]);
+        }
       }
     }
+
+
+    vector<string> vecEvents = theStore.EventQ.to_str();
+    for(int i = 0; i < vecEvents.size(); i++)
+    {
+      glRasterPos2i(1025, 200+(20*i));
+      for (int l = 0; l < vecEvents[i].length(); ++l)
+      {
+          glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, vecEvents[i][l]);
+      }
+    }
+
+
+
     E = theStore.EventQ.pop();
     theStore.setTime(E.get_time());
     theStore.handleEvent(E);
     glFlush();  // Render now
+    //std::this_thread::sleep_for (std::chrono::seconds(1));
 }
 
 // http://www.theasciicode.com.ar/ascii-control-characters/escape-ascii-code-27.html
@@ -195,7 +219,7 @@ void kbdS(int key, int x, int y) {
 void cursor(int x, int y) {
 
 
-    glutPostRedisplay();
+    //glutPostRedisplay();
 }
 
 // button will be GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON
@@ -209,8 +233,9 @@ void mouse(int button, int state, int x, int y) {
 
 void timer(int dummy) {
 
+    glutTimerFunc(2000, timer, 0);
     glutPostRedisplay();
-    glutTimerFunc(10, timer, dummy);
+
 }
 
 /* Main function: GLUT runs as a console application starting at main()  */
@@ -249,19 +274,19 @@ int main(int argc, char** argv) {
     // handles timer
     glutTimerFunc(0, timer, 0);
 
-    /****************************************/
-    /*         Here's the GLUI code         */
-    /****************************************/
-
-    GLUI *glui = GLUI_Master.create_glui( "GLUI");
-    GLUI_Spinner *spin = glui -> add_spinner("Number of Lines:", GLUI_SPINNER_INT,&numOfLines );
-    spin->set_int_limits( 1, 10 );
-    // spin->set_w(1000);
-
-    glui->set_main_gfx_window( wd );
-
-    /* We register the idle callmain_windowback with GLUI, *not* with GLUT */
-    GLUI_Master.set_glutIdleFunc( myGlutIdle );
+    // /****************************************/
+    // /*         Here's the GLUI code         */
+    // /****************************************/
+    //
+    // GLUI *glui = GLUI_Master.create_glui( "GLUI");
+    // GLUI_Spinner *spin = glui -> add_spinner("Number of Lines:", GLUI_SPINNER_INT,&numOfLines );
+    // spin->set_int_limits( 1, 10 );
+    // // spin->set_w(1000);
+    //
+    // glui->set_main_gfx_window( wd );
+    //
+    // /* We register the idle callmain_windowback with GLUI, *not* with GLUT */
+    // GLUI_Master.set_glutIdleFunc( myGlutIdle );
     // Enter the event-processing loop
     glutMainLoop();
     return 0;
