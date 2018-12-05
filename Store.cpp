@@ -3,7 +3,7 @@
 
 //====================================================================================================
 
-int Store::arrivalSeed = 5; //10
+int Store::arrivalSeed = 2; //10
 unsigned long int Store::Time = 0;
 
 //no-arg Store constructor
@@ -25,7 +25,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 {
 	//Print The Current Time
 	printf("========================= %lu =========================\n\n", Time);
-	cout << EventQ.to_str() << endl;
+	//cout << EventQ.to_str() << endl;
 
 	//Print the Status of the CheckoutLines and Customers
 	printLines();
@@ -216,13 +216,13 @@ void Store::setTime(int t){
 //====================================================================================================
 
 int Store::genCashTime(int numItems){
-	//TODO
-	return(numItems);
+	int r = floor((0.20*numItems) + 1);
+	return(r);
 }
 
 int Store::genShopTime(int numItems){
-	//TODO
-	return(numItems);
+	int r = floor((0.80*numItems) + 2);
+	return(r);
 }
 
 void Store::removeCustomer(int ID)
