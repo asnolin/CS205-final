@@ -25,6 +25,7 @@
 #include<vector>
 #include<string>
 #include<sstream>
+#include<iomanip>
 using namespace std;
 
 
@@ -105,22 +106,22 @@ class EventNode{
 	//to-string function
 	string to_str(){
 		stringstream stream;
-		stream << time << "\t" << id1 << "\t" << id2 << "\t";
+		stream << left << setw(4) << time << "  C" << setw(3) << id1 << "  L" << setw(3) << id2 << "  ";
 		switch(type){
 			case CUSTOMER_ARRIVES:
-				stream << "CUSTOMER_ARRIVES";
+				stream << "ARRIVES";
 				break;
 			case CUSTOMER_CHECKOUT_READY:
-				stream << "CUSTOMER_CHECKOUT_READY";
+				stream << "CHECKOUT_READY";
 				break;
 			case CUSTOMER_CHECKOUT_FINISH:
-				stream << "CUSTOMER_CHECKOUT_FINISH";
+				stream << "CHECKOUT_FINISH";
 				break;
 			case CUSTOMER_CHANGES_LINE:
-				stream << "CUSTOMER_CHANGES_LINE";
+				stream << "CHANGES_LINE";
 				break;
 			case CUSTOMER_ABANDONS_LINE:
-				stream << "CUSTOMER_ABANDONS_LINE";
+				stream << "ABANDONS_LINE";
 				break;
 			case VOID_EVENT:
 				stream << "VOID_EVENT";
@@ -260,19 +261,21 @@ class EventQueue{
 	}//end is_empty
 
 	//print the event queue
-	string to_str(){
+	vector<string> to_str()
+	{
+		vector<string> vecEvents;
 		const deque<EventNode<T, S> > myDeque = eventQ.get_container();
 		string str;
 		if(myDeque.size() > 0){
 			for(auto itr = myDeque.cbegin(); itr != myDeque.cend(); ++itr){
 				EventNode<T, S> node = *itr;
 				//TODO
-				str += node.to_str();
+				vecEvents.push_back(node.to_str());
 			}//end for itr
 		}else{
 			str = "the event queue is empty\n";
 		}
-		return str;
+		return vecEvents;
 	}//end to_str
 
 };//end EventQueue
