@@ -15,7 +15,7 @@ using namespace std;
 class CheckoutLine {
 private:
     //fields
-    vector <Customer> customerLine;
+
     int ID;
     int NumCustomers;
     int NumItems;
@@ -26,6 +26,9 @@ private:
 public:
     CheckoutLine();
     //getter
+
+    vector <Customer> customerLine;
+
     int getID() const;
     int getNumCustomers() const;
     int getNumItems() const;

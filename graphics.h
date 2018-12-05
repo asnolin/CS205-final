@@ -45,4 +45,3 @@ void timer(int dummy);
 void mouse(int button, int state, int x, int y);
 
 #endif /* graphics_h */
-
