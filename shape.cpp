@@ -42,7 +42,7 @@ void Shape::set_fill(color c) {
 }
 
 void Shape::set_fill(double r, double g, double b) {
-    fill = {r, g, b};
+    fill = (color) {r, g, b};
 }
 
 void Shape::set_position(point p) {
@@ -50,7 +50,7 @@ void Shape::set_position(point p) {
 }
 
 void Shape::set_position(int x_in, int y_in) {
-    position = {x_in, y_in};
+    position = (point) {x_in, y_in};
 }
 
 Rectangles::Rectangles() : Shape(), width(0), height(0) {}
