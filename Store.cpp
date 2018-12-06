@@ -9,7 +9,7 @@ unsigned long int Store::Time = 0;
 //no-arg Store constructor
 Store::Store(){
 	Time = 0;
-	Strat = NUM_CUSTOMERS;
+	Strat = RANDOM;
 	NumCheckouts = 0;
 }//end store default constructor
 
@@ -283,7 +283,7 @@ CheckoutLine* Store::chooseLine(int Items){
 	//======================================================================
 		case RANDOM :
 			L = Lines[genRandUni(0, Lines.size()-1)];
-			while(Items>Lines[i]->getItemLimit() || Lines[i]->getStatus()==false)
+			while(Items>L->getItemLimit() || L->getStatus()==false)
 			{
 				L = Lines[genRandUni(0, Lines.size()-1)];
 			}
