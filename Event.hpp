@@ -25,6 +25,7 @@
 #include<vector>
 #include<string>
 #include<sstream>
+#include<iostream>
 #include<iomanip>
 using namespace std;
 
@@ -47,7 +48,7 @@ class EventNode{
 
 	public:
 	//no-arg constructor
-	EventNode(){
+	EventNode()
 		time = 1;
 		obj1 = nullptr;
 		id1 = 0;
@@ -141,29 +142,9 @@ class EventNode{
 template<class T, class S>
 class EventQueue{
 	private:
-	//minimum time an event can be and current time for the system
 	unsigned long int currentTime;
-
-	/* nested class inherits from a priority_queue, but has a method to return a pointer to the container
-	 * Found the container variable, c,  in the bits/stl_queue.h file which defines the priority_queue
-	 * this allows for printing of the event queue
-	 */
-	class MyPQ : public std::priority_queue<EventNode<T, S>,
-						std::deque<EventNode<T, S> >,
-						std::greater<EventNode<T, S> > >{
-
-		public:
-		//creates a copy of the priority queue's container and returns it
-		deque<EventNode<T, S> > get_container() const{
-			deque<EventNode<T, S> > copy = deque<EventNode<T, S> >(priority_queue<EventNode<T, S>, std::deque<EventNode<T, S> >, std::greater<EventNode<T, S> > >::c);
-			return copy;
-		}//end get_container
-
-	};//end MyPQ class
-
-
-	//instance of the MyPQ class
-	MyPQ eventQ;
+	//instance of the priority queue
+	priority_queue<EventNode<T, S>, std::vector<EventNode<T, S> >, std::greater<EventNode<T, S> > > eventQ;
 
 	public:
 	//no-arg construtctor
@@ -172,18 +153,11 @@ class EventQueue{
 	}//end no-arg constructor
 
 	//creates a new EventNode of class T and adds it to the pq
-	//returns true when successful
-	bool make_event(unsigned long int inT, T *inObj1, int inId1, S *inObj2, int inId2,  eventType inType){
-		if(inT < currentTime){
-			return false;
-		}else{
-			//create new EventNode
-			EventNode<T, S> node = EventNode<T, S>(inT, inObj1, inId1, inObj2, inId2, inType);
-			//add EventNode to eventQ
-			eventQ.push(node);
-			//return true if successful
-			return true;
-		}
+	void make_event(unsigned long int inT, T *inObj1, int inId1, S *inObj2, int inId2,  eventType inType){
+		//create new EventNode
+		EventNode<T, S> node = EventNode<T, S>(inT, inObj1, inId1, inObj2, inId2, inType);
+		//add EventNode to eventQ
+		eventQ.push(node);
 	}//end make_event
 
 
@@ -195,15 +169,13 @@ class EventQueue{
 			//save head and pop head from priority_queue
 			EventNode<T, S> head  = eventQ.top();
 			eventQ.pop();
-			//update currentTime to the popped event's time
-			currentTime = head.get_time();
 			return head;
 		}
 	}//end pop
 
-	/*
-	 * unused functions
-	 *
+
+/*
+ * unused code
 	//advance head
 	void advance_head(){
 		if(!eventQ.empty()){
@@ -213,7 +185,6 @@ class EventQueue{
 			currentTime = node.get_time();
 		}
 	}//end advance_head
-
 
 
 	//getters
@@ -254,26 +225,31 @@ class EventQueue{
 		}
 	}//end get_ptr2
 
-	*/
 
+*/
 	bool is_empty(){
 		return eventQ.empty();
 	}//end is_empty
 
+
 	//print the event queue
-	vector<string> to_str()
-	{
-		vector<string> vecEvents;
-		const deque<EventNode<T, S> > myDeque = eventQ.get_container();
-		string str;
-		if(myDeque.size() > 0){
-			for(auto itr = myDeque.cbegin(); itr != myDeque.cend(); ++itr){
-				EventNode<T, S> node = *itr;
-				//TODO
+	vector<string> to_str(){
+		vector<string> vecEvents; //holds the strings
+		//holds the event nodes after they are popped off
+		priority_queue<EventNode<T, S>, std::vector<EventNode<T, S> >, std::greater<EventNode<T, S> > > tempPQ; 
+		//holds the eventnode
+		EventNode<T, S> node;
+		if(!eventQ.empty()){
+			while(!eventQ.empty()){
+				cout << "eventQ has: " << eventQ.size() << endl;
+				node = eventQ.top();
+				eventQ.pop();
 				vecEvents.push_back(node.to_str());
+				tempPQ.push(node);
 			}//end for itr
+			swap(tempPQ, eventQ);
 		}else{
-			str = "the event queue is empty\n";
+			vecEvents.push_back("the event queue is empty\n");
 		}
 		return vecEvents;
 	}//end to_str
