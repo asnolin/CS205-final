@@ -19,13 +19,21 @@ Rectangles r1(980,150,(color){1,1,1},(point){10,10});
 Rectangles r2(270,150,(color){1,1,1},(point){1000,10});
 Rectangles r3(980,600,(color){1,1,1},(point){10,170});
 Rectangles r4(270,600,(color){1,1,1},(point){1000,170});
+//function buttons
+Rectangles Start(70,50,(color){0,200,0},(point){400,700});
+Rectangles Stop(70,50,(color){1,0,0},(point){500,700});
+
+//strategy buttons
+Rectangles s1(70,50,(color){0,0,0.2},(point){600,700});
+Rectangles s2(70,50,(color){0,0,1},(point){700,700});
+Rectangles s3(70,50,(color){0,0,1},(point){800,700});
+Rectangles s4(70,50,(color){0,0,1},(point){900,700});
 
 Rectangles HelpBox(40,40,(color){0.9,0.2,0},(point){20,720});
 
 vector<Rectangles> ExpressBoxes;
 vector<Rectangles> StatusBoxes;
 
-Rectangles Start(50,50,(color){0,200,0},(point){400,600});
 
 int LaneLimit = 0;
 
@@ -117,7 +125,9 @@ void display() {
     string eventQtitle = "Event Queue";
     string storeTitle = "Super Market";
     string totalNumberofShopper = "Shoppers In Store: " + int_to_string(theStore.Shopping.size());
-
+    string start = "Start";
+    string stop = "Stop";
+    string strategy = "Strategies";
     //basic background
     if(Show == 0)
     {
@@ -125,7 +135,12 @@ void display() {
       r2.draw();
       r3.draw();
       r4.draw();
+      s1.draw();
+      s2.draw();
+      s3.draw();
+      s4.draw();
       Start.draw();
+      Stop.draw();
       HelpBox.draw();
 
       for(int i = 0; i < numLines; i++)
@@ -133,7 +148,20 @@ void display() {
         ExpressBoxes[i].draw();
         StatusBoxes[i].draw();
       }
-
+      glColor3f(0, 0, 0);
+      glRasterPos2i(730, 685);
+      for (int i = 0; i < strategy.length(); ++i) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, strategy[i]);
+      }
+      glRasterPos2i(410, 730);
+      for (int i = 0; i < start.length(); ++i) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, start[i]);
+      }
+      //stop
+      glRasterPos2i(515, 730);
+      for (int i = 0; i < stop.length(); ++i) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, stop[i]);
+      }
     //set color to black
     glColor3f(0, 0, 1);
     glRasterPos2i(15, 700);
@@ -320,9 +348,35 @@ void cursor(int x, int y) {
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
 
-    if(button==GLUT_LEFT_BUTTON & Start.pointOverlap(x,y))
-    {
-      Run = true;
+    if(Start.pointOverlap(x,y)) {
+        Run = true;
+    }
+    if(Stop.pointOverlap(x,y)){
+        Run = false;
+    }
+    if(s1.pointOverlap(x,y)){
+        s1.set_fill(0,0,0.2);
+        s2.set_fill(0,0,1);
+        s3.set_fill(0,0,1);
+        s4.set_fill(0,0,1);
+    }
+    if(s2.pointOverlap(x,y)){
+        s2.set_fill(0,0,0.2);
+        s1.set_fill(0,0,1);
+        s3.set_fill(0,0,1);
+        s4.set_fill(0,0,1);
+    }
+    if(s3.pointOverlap(x,y)){
+        s3.set_fill(0,0,0.2);
+        s2.set_fill(0,0,1);
+        s1.set_fill(0,0,1);
+        s4.set_fill(0,0,1);
+    }
+    if(s4.pointOverlap(x,y)){
+        s4.set_fill(0,0,0.2);
+        s2.set_fill(0,0,1);
+        s3.set_fill(0,0,1);
+        s1.set_fill(0,0,1);
     }
 
     if(button==GLUT_LEFT_BUTTON & state==GLUT_DOWN & HelpBox.pointOverlap(x,y))
