@@ -9,7 +9,7 @@ unsigned long int Store::Time = 0;
 //no-arg Store constructor
 Store::Store(){
 	Time = 0;
-	Strat = RANDOM;
+	Strat = NUM_CUSTOMERS;
 	NumCheckouts = 0;
 }//end store default constructor
 
@@ -105,6 +105,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 
 		//Remove Customer from Global Shopping Vector
 		removeCustomer(C->getId());
+		delete(C);
 
 		//Free Memory Allocated to Customer ?
 	}
@@ -145,6 +146,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 
 		//Remove Customer from Global Shopping Vector
 		removeCustomer(C->getId());
+		delete(C);
 
 		//Free Memory Allocated to Customer ?
 	};
