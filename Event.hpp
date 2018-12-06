@@ -47,7 +47,7 @@ class EventNode{
 
 	public:
 	//no-arg constructor
-	EventNode()
+	EventNode(){
 		time = 1;
 		obj1 = nullptr;
 		id1 = 0;
@@ -109,22 +109,22 @@ class EventNode{
 		stream << left << setw(4) << time << "  C" << setw(3) << id1 << "  L" << setw(3) << id2 << "  ";
 		switch(type){
 			case CUSTOMER_ARRIVES:
-				stream << "ARRIVES";
+				stream << "CUSTOMER ARRIVES";
 				break;
 			case CUSTOMER_CHECKOUT_READY:
-				stream << "CHECKOUT_READY";
+				stream << "CHECKOUT READY";
 				break;
 			case CUSTOMER_CHECKOUT_FINISH:
-				stream << "CHECKOUT_FINISH";
+				stream << "CHECKOUT FINISH";
 				break;
 			case CUSTOMER_CHANGES_LINE:
-				stream << "CHANGES_LINE";
+				stream << "CHANGES LINE";
 				break;
 			case CUSTOMER_ABANDONS_LINE:
-				stream << "ABANDONS_LINE";
+				stream << "ABANDONS LINE";
 				break;
 			case VOID_EVENT:
-				stream << "VOID_EVENT";
+				stream << "VOID EVENT";
 				break;
 		}
 		stream << "\n";
