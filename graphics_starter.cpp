@@ -347,36 +347,37 @@ void cursor(int x, int y) {
 // button will be GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
-
-    if(Start.pointOverlap(x,y)) {
-        Run = true;
-    }
-    if(Stop.pointOverlap(x,y)){
-        Run = false;
-    }
-    if(s1.pointOverlap(x,y)){
-        s1.set_fill(0,0,0.2);
-        s2.set_fill(0,0,1);
-        s3.set_fill(0,0,1);
-        s4.set_fill(0,0,1);
-    }
-    if(s2.pointOverlap(x,y)){
-        s2.set_fill(0,0,0.2);
-        s1.set_fill(0,0,1);
-        s3.set_fill(0,0,1);
-        s4.set_fill(0,0,1);
-    }
-    if(s3.pointOverlap(x,y)){
-        s3.set_fill(0,0,0.2);
-        s2.set_fill(0,0,1);
-        s1.set_fill(0,0,1);
-        s4.set_fill(0,0,1);
-    }
-    if(s4.pointOverlap(x,y)){
-        s4.set_fill(0,0,0.2);
-        s2.set_fill(0,0,1);
-        s3.set_fill(0,0,1);
-        s1.set_fill(0,0,1);
+    if(button==GLUT_LEFT_BUTTON) {
+        if (Start.pointOverlap(x, y)) {
+            Run = true;
+        }
+        if (Stop.pointOverlap(x, y)) {
+            Run = false;
+        }
+        if (s1.pointOverlap(x, y)) {
+            s1.set_fill(0, 0, 0.2);
+            s2.set_fill(0, 0, 1);
+            s3.set_fill(0, 0, 1);
+            s4.set_fill(0, 0, 1);
+        }
+        if (s2.pointOverlap(x, y)) {
+            s2.set_fill(0, 0, 0.2);
+            s1.set_fill(0, 0, 1);
+            s3.set_fill(0, 0, 1);
+            s4.set_fill(0, 0, 1);
+        }
+        if (s3.pointOverlap(x, y)) {
+            s3.set_fill(0, 0, 0.2);
+            s2.set_fill(0, 0, 1);
+            s1.set_fill(0, 0, 1);
+            s4.set_fill(0, 0, 1);
+        }
+        if (s4.pointOverlap(x, y)) {
+            s4.set_fill(0, 0, 0.2);
+            s2.set_fill(0, 0, 1);
+            s3.set_fill(0, 0, 1);
+            s1.set_fill(0, 0, 1);
+        }
     }
 
     if(button==GLUT_LEFT_BUTTON & state==GLUT_DOWN & HelpBox.pointOverlap(x,y))
