@@ -7,28 +7,35 @@
 #include <vector>
 #include <iostream>
 
-#include <thread>         // std::this_thread::sleep_for
-#include <chrono>         // std::chrono::seconds
-
 using namespace std;
 
 string int_to_string(int i);
-
+string dub_to_string(double i);
 //variables
 GLdouble width, height;
 int wd;
-int   numOfLines = 3;
+int numLines = 10;
 Rectangles r1(980,150,(color){1,1,1},(point){10,10});
 Rectangles r2(270,150,(color){1,1,1},(point){1000,10});
 Rectangles r3(980,600,(color){1,1,1},(point){10,170});
 Rectangles r4(270,600,(color){1,1,1},(point){1000,170});
 
+Rectangles HelpBox(40,40,(color){0.9,0.2,0},(point){20,720});
+
+vector<Rectangles> ExpressBoxes;
+vector<Rectangles> StatusBoxes;
+
 Rectangles Start(50,50,(color){0,200,0},(point){400,600});
+
+int LaneLimit = 0;
 
 Store theStore;
 EventNode<Customer, CheckoutLine> E;
 
 bool Run = false;
+bool ShowHelp = false;
+
+int Show = 0;
 
 void myGlutIdle()
 {
@@ -49,10 +56,22 @@ void init() {
     theStore.setTime(0);
 
     int i;
-    for(i = 0; i < 4; i++)
+    for(i = 0; i < numLines; i++)
     {
       CheckoutLine *L = new CheckoutLine();
       theStore.addCheckoutLine(L);
+    }
+
+    for(int i = 0; i < numLines; i++)
+    {
+      Rectangles r(20,20,(color){0,0,1},(point){15,(230+(45*i))});
+      ExpressBoxes.push_back(r);
+    }
+
+    for(int i = 0; i < numLines; i++)
+    {
+      Rectangles r(20,20,(color){0,1,0},(point){40,(230+(45*i))});
+      StatusBoxes.push_back(r);
     }
 
     EventNode<Customer,CheckoutLine> E;
@@ -92,68 +111,132 @@ void display() {
      */
     //draw string
 
-    string time = "- " + to_string(theStore.getTime()) + " -";
-    string meanTimeInStore = "Mean Time-In-Store |";
-    string meanWaitTime = "Mean Waiting Time";
+    string stime = "- " + to_string(theStore.getTime()) + " -";
+    string avgWaitTime = "Avg Wait Time: " + dub_to_string(theStore.getAvgWaitTime());
+    string checkoutRate = "Checkouts Per Hour: " + dub_to_string(theStore.getCheckoutRate());
     string eventQtitle = "Event Queue";
-    string storeTitle = "Grocery Store";
-    string totalNumberofShopper = "Total Number of Shoppers";
-    string chekcoutLine1 = "Checkout Line #1";
-    string chekcoutLine2 = "Checkout Line #2";
-    string chekcoutLine3 = "Checkout Line #3";
-    string chekcoutLine4 = "Checkout Line #4";
-    string chekcoutLine5 = "Checkout Line #5";
-    string chekcoutLine6 = "Checkout Line #6";
-    string chekcoutLine7 = "Checkout Line #7";
-    string chekcoutLine8 = "Checkout Line #8";
-    string chekcoutLine9 = "Checkout Line #9";
-    string chekcoutLine10 = "Checkout Line #10";
+    string storeTitle = "Super Market";
+    string totalNumberofShopper = "Shoppers In Store: " + int_to_string(theStore.Shopping.size());
 
     //basic background
-    r1.draw();
-    r2.draw();
-    r3.draw();
-    r4.draw();
-    Start.draw();
+    if(Show == 0)
+    {
+      r1.draw();
+      r2.draw();
+      r3.draw();
+      r4.draw();
+      Start.draw();
+      HelpBox.draw();
+
+      for(int i = 0; i < numLines; i++)
+      {
+        ExpressBoxes[i].draw();
+        StatusBoxes[i].draw();
+      }
 
     //set color to black
-    glColor3f(0, 0, 0);
-    // set for time
-    glRasterPos2i(480, 50);
-    for (int i = 0; i < time.length(); ++i) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, time[i]);
+    glColor3f(0, 0, 1);
+    glRasterPos2i(15, 700);
+    string ExLaneLabel = "Express Lane Limit: " + to_string(LaneLimit);
+    for (int i = 0; i < ExLaneLabel.length(); ++i) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ExLaneLabel[i]);
     }
+
+    glColor3f(0, 0, 0);
+    glRasterPos2i(35, 745);
+    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, char('?'));
+
+    if(!ShowHelp)
+    {
+      // set for time
+      glColor3f(0, 0, 0);
+      glRasterPos2i(480, 50);
+      for (int i = 0; i < stime.length(); ++i) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, stime[i]);
+      }
+
+      // set for total number of shoppers in store
+      glRasterPos2i(30, 90);
+      for (int i = 0; i < totalNumberofShopper.length(); ++i) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, totalNumberofShopper[i]);
+      }
+
+      // set for mean time in store
+      glRasterPos2i(280, 90);
+      for (int i = 0; i < avgWaitTime.length(); ++i) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, avgWaitTime[i]);
+      }
+      // set for mean time wait in store
+      glRasterPos2i(550, 90);
+      for (int i = 0; i < checkoutRate.length(); ++i) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, checkoutRate[i]);
+      }
+
+
+    }
+    else
+    {
+      //set color to black
+      glColor3f(0, 0, 0);
+      glRasterPos2i(20, 40);
+      string ExLaneLabel2 = "*Use Up and Down Arrow Keys to Change Express Lane Limit*";
+      for (int i = 0; i < ExLaneLabel2.length(); ++i) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ExLaneLabel2[i]);
+      }
+      //set color to black
+      glColor3f(0, 0, 0);
+      glRasterPos2i(20, 70);
+      string ExLaneLabel3 = "*Click Blue Boxes Next to Checkout Lines to Toggle Express Lane*";
+      for (int i = 0; i < ExLaneLabel3.length(); ++i) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ExLaneLabel3[i]);
+      }
+
+      //set color to black
+      glColor3f(0, 0, 0);
+      glRasterPos2i(20, 100);
+      string ExLaneLabel4 = "*Click Red/Green Boxes Next to Checkout Lines to Open/Close Them*";
+      for (int i = 0; i < ExLaneLabel4.length(); ++i) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ExLaneLabel4[i]);
+      }
+    }
+
     // set for event queue title
     glRasterPos2i(1070, 90);
     for (int i = 0; i < eventQtitle.length(); ++i) {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, eventQtitle[i]);
     }
-    // set for mean time in store
-    glRasterPos2i(280, 90);
-    for (int i = 0; i < meanTimeInStore.length(); ++i) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, meanTimeInStore[i]);
-    }
-    // set for mean time wait in store
-    glRasterPos2i(520, 90);
-    for (int i = 0; i < meanWaitTime.length(); ++i) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, meanWaitTime[i]);
-    }
+
     // set for store title
-    glRasterPos2i(450, 200);
-    for (int i = 0; i < storeTitle.length(); ++i) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, storeTitle[i]);
+    glRasterPos2i(450, 210);
+    for (int i = 0; i < string("Super Market").length(); ++i) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string("Super Market")[i]);
     }
-    // set for total number of shoppers in store
-    glRasterPos2i(375, 220);
-    for (int i = 0; i < totalNumberofShopper.length(); ++i) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, totalNumberofShopper[i]);
-    }
+
     for (int i = 0; i<theStore.Lines.size(); ++i)
     {
       int newY =45*i;
-      std::string lineTxt = "Customer line #" + std::to_string(theStore.Lines[i]->getID()) + ": ";
+
+      if(theStore.Lines[i]->getItemLimit() != 100)
+      {
+        if(theStore.Lines[i]->getItemLimit() < 10)
+        {
+          glRasterPos2i(22, (245 + newY));
+        }
+        else
+        {
+          glRasterPos2i(18, (245 + newY));
+        }
+        string strLimit = int_to_string(theStore.Lines[i]->getItemLimit());
+        for (int j = 0; j < strLimit.length(); ++j)
+        {
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, strLimit[j]);
+        }
+      }
+
+      std::string lineTxt = "Checkout Line #" + std::to_string(theStore.Lines[i]->getID()) + ": ";
+
       glColor3f(0, 0, 0);
-      glRasterPos2i(50, (240 + newY));
+      glRasterPos2i(65, (250 + newY));
       for (int j = 0; j < lineTxt.length(); ++j)
       {
           glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, lineTxt[j]);
@@ -161,12 +244,13 @@ void display() {
 
       for (int k = 0; k<theStore.Lines[i]->customerLine.size(); ++k)
       {
-        glRasterPos2i(200+((k+1)*50), (240 + newY));
-        string nmTimes = std::to_string(theStore.Lines[i]->customerLine[k].getNumItems());
+        glRasterPos2i(255+(k*85), (250 + newY));
+        string nmTimes = "(" + std::to_string(theStore.Lines[i]->customerLine[k].getId()) + ")" + std::to_string(theStore.Lines[i]->customerLine[k].getNumItems());
         for (int l = 0; l < lineTxt.length(); ++l)
         {
             glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, nmTimes[l]);
         }
+        if(k > 6) break;
       }
     }
 
@@ -187,6 +271,7 @@ void display() {
       theStore.setTime(E.get_time());
       theStore.handleEvent(E);
     }
+  }
 
     glFlush();  // Render now
     //std::this_thread::sleep_for (std::chrono::seconds(1));
@@ -206,18 +291,22 @@ void kbd(unsigned char key, int x, int y)
 
 void kbdS(int key, int x, int y) {
     switch(key) {
-        case GLUT_KEY_DOWN:
 
-            break;
+        case GLUT_KEY_UP:
+          LaneLimit++;
+          break;
+
+        case GLUT_KEY_DOWN:
+          if(LaneLimit>0) LaneLimit--;
+          break;
+
         case GLUT_KEY_LEFT:
 
-            break;
+          break;
+
         case GLUT_KEY_RIGHT:
 
-            break;
-        case GLUT_KEY_UP:
-
-            break;
+          break;
     }
 
     glutPostRedisplay();
@@ -225,8 +314,6 @@ void kbdS(int key, int x, int y) {
 
 void cursor(int x, int y) {
 
-
-    //glutPostRedisplay();
 }
 
 // button will be GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON
@@ -238,6 +325,44 @@ void mouse(int button, int state, int x, int y) {
       Run = true;
     }
 
+    if(button==GLUT_LEFT_BUTTON & state==GLUT_DOWN & HelpBox.pointOverlap(x,y))
+    {
+      if(ShowHelp==true) ShowHelp=false;
+      else ShowHelp=true;
+    }
+
+    if(button==GLUT_LEFT_BUTTON & state==GLUT_DOWN)
+    {
+      for(int i=0; i<numLines; i++)
+      {
+        if(ExpressBoxes[i].pointOverlap(x,y) & i!=0)
+        {
+          if(theStore.Lines[i]->getItemLimit() == 100)
+          {
+            theStore.Lines[i]->setItemLimit(LaneLimit);
+            ExpressBoxes[i].set_fill((color){0.5,0,0.8});
+          }
+          else
+          {
+            theStore.Lines[i]->setItemLimit(100);
+            ExpressBoxes[i].set_fill((color){0,0,1});
+          }
+        }
+        if(StatusBoxes[i].pointOverlap(x,y) & i!=0)
+        {
+          if(theStore.Lines[i]->getStatus())
+          {
+            theStore.Lines[i]->togStatus();
+            StatusBoxes[i].set_fill((color){1,0,0});
+          }
+          else
+          {
+            theStore.Lines[i]->togStatus();
+            StatusBoxes[i].set_fill((color){0,1,0});
+          }
+        }
+      }
+    }
 
     glutPostRedisplay();
 }
@@ -261,7 +386,7 @@ int main(int argc, char** argv) {
     glutInitWindowSize((int)width, (int)height);
     glutInitWindowPosition(100, 200); // Position the window's initial top-left corner
     /* create the window and store the handle to it */
-    wd = glutCreateWindow("Fun with Drawing!" /* title */ );
+    wd = glutCreateWindow("Super Market Simulation" /* title */ );
 
     // Register callback handler for window re-paint event
     glutDisplayFunc(display);
@@ -307,4 +432,12 @@ string int_to_string(int i){
     sprintf(t, "%d", i);
     string s = t;
     return s;
+}
+
+string dub_to_string(double i)
+{
+  char t[256];
+  sprintf(t, "%.2f", i);
+  string s = t;
+  return s;
 }
