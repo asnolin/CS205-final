@@ -25,7 +25,6 @@
 #include<vector>
 #include<string>
 #include<sstream>
-#include<iostream>
 #include<iomanip>
 using namespace std;
 
@@ -241,7 +240,6 @@ class EventQueue{
 		EventNode<T, S> node;
 		if(!eventQ.empty()){
 			while(!eventQ.empty()){
-				cout << "eventQ has: " << eventQ.size() << endl;
 				node = eventQ.top();
 				eventQ.pop();
 				vecEvents.push_back(node.to_str());
