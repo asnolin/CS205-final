@@ -98,6 +98,13 @@ int main(int argc, char* argv[]){
 		}else{
 			cout<<"order is not preserved for nodes with same time value" <<endl;
 		}
+		cout << "testing the rejection of an incorrect new event" <<endl;
+		cout << "the current time is: " << node2.get_time() << endl;
+		if(eventQueue.make_event(0, &d2, d2.get_id(), &myStuff, myStuff.get_id(), VOID_EVENT)){
+			cout << "event queue fails to reject the incorrect new event!" << endl;
+		}else{
+			cout << "event queue successfully rejects the bad event" << endl;
+		}
 
 	}//end try block
 	catch(const std::runtime_error){
@@ -139,10 +146,6 @@ int main(int argc, char* argv[]){
 
 
 	cout << "Testing the print function" << endl;
-	myvec = eventQueue.to_str();
-	for(int i = 0; i < myvec.size(); ++i){
-		cout << myvec[i] << endl;
-	}
 	myvec = eventQueue.to_str();
 	for(int i = 0; i < myvec.size(); ++i){
 		cout << myvec[i] << endl;
