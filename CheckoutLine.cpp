@@ -55,6 +55,21 @@ void CheckoutLine::updateWaitTime(int n){
     WaitTime = WaitTime + n;
 };
 
+bool CheckoutLine::getStatus() const
+{
+  return Open;
+}
+
+void CheckoutLine::togStatus()
+{
+  if(Open){
+    Open = false;
+  }
+  else{
+    Open = true;
+  }
+}
+
 void CheckoutLine::update() {
     NumItems = 0;
     NumCustomers = 0;

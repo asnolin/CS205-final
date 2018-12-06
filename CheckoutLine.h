@@ -22,6 +22,8 @@ private:
     int WaitTime;
     int ItemLimit;
 
+    bool Open = true;;
+
     static int idSeed;
 public:
     CheckoutLine();
@@ -34,6 +36,9 @@ public:
     int getNumItems() const;
     int getWaitTime() const;
     int getItemLimit() const;
+
+    bool getStatus() const;
+    void togStatus();
 
     //setter
     //void setID(int ID);

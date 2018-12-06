@@ -3,14 +3,13 @@
 
 //====================================================================================================
 
-int Store::arrivalSeed = 2; //10
+int Store::arrivalSeed = 1; //10
 unsigned long int Store::Time = 0;
 
 //no-arg Store constructor
 Store::Store(){
 	Time = 0;
-	AvgWaitTime = 0;
-	Strat = RANDOM;
+	Strat = NUM_CUSTOMERS;
 	NumCheckouts = 0;
 }//end store default constructor
 
@@ -57,7 +56,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		printEvent(Time+shopTime, aCustomer, NULL, CUSTOMER_CHECKOUT_READY);
 
 		//Calculate when Next Customer Arrives
-		int nextArriveTime = Time + genRandExp(arrivalSeed);
+		int nextArriveTime = Time + genRandExp(arrivalSeed) + 1;
 		//Add Customer_Arrives Event
 		EventQ.make_event(nextArriveTime, NULL, 0, NULL, 0, CUSTOMER_ARRIVES);
 
@@ -255,7 +254,7 @@ CheckoutLine* Store::chooseLine(int Items){
 		case NUM_ITEMS :
 			for(i = 0; i < Lines.size(); i++)
 			{
-				if(Lines[i]->getNumItems()<L->getNumItems() & Items<=L->getItemLimit())
+				if(Lines[i]->getNumItems()<L->getNumItems() & Items<=Lines[i]->getItemLimit() & Lines[i]->getStatus())
 				{
 					L = Lines[i];
 				}
@@ -265,7 +264,7 @@ CheckoutLine* Store::chooseLine(int Items){
 		case NUM_CUSTOMERS :
 			for(i = 0; i < Lines.size(); i++)
 			{
-				if(Lines[i]->getNumCustomers()<L->getNumCustomers() & Items<=L->getItemLimit())
+				if(Lines[i]->getNumCustomers()<L->getNumCustomers() & Items<=Lines[i]->getItemLimit() & Lines[i]->getStatus())
 				{
 					L = Lines[i];
 				}
@@ -275,7 +274,7 @@ CheckoutLine* Store::chooseLine(int Items){
 		case WAIT_TIME :
 			for(i = 0; i < Lines.size(); i++)
 			{
-				if(Lines[i]->getWaitTime()<L->getWaitTime() & Items<=L->getItemLimit())
+				if(Lines[i]->getWaitTime()<L->getWaitTime() & Items<=Lines[i]->getItemLimit() & Lines[i]->getStatus())
 				{
 					L = Lines[i];
 				}
@@ -284,7 +283,7 @@ CheckoutLine* Store::chooseLine(int Items){
 	//======================================================================
 		case RANDOM :
 			L = Lines[genRandUni(0, Lines.size()-1)];
-			while(Items>L->getItemLimit())
+			while(Items>Lines[i]->getItemLimit() || Lines[i]->getStatus()==false)
 			{
 				L = Lines[genRandUni(0, Lines.size()-1)];
 			}
@@ -296,21 +295,34 @@ CheckoutLine* Store::chooseLine(int Items){
 //====================================================================================================
 
 double Store::getAvgWaitTime(){
-	 int t = 0;
-	 int i;
-	 for(i = 0; i < WaitTimes.size(); i++)
-	 {
-		 t += WaitTimes[i];
-	 }
-	 AvgWaitTime = (double)t / (double)WaitTimes.size();
-
-	 return AvgWaitTime;
+	if(WaitTimes.size()==0)
+	{
+		return 0;
+	}
+	else
+	{
+		int t = 0;
+		for(int i = 0; i < WaitTimes.size(); i++)
+		{
+			t += WaitTimes[i];
+		}
+		AvgWaitTime = (double)t / (double)WaitTimes.size();
+		return AvgWaitTime;
+	}
 }
 
 double Store::getCheckoutRate()
 {
-	CheckoutRate = (double) NumCheckouts / (double)((double)Time/60);
-	return CheckoutRate;
+	if(Time != 0)
+	{
+		CheckoutRate = (double) NumCheckouts / (double)((double)Time/60);
+		return CheckoutRate;
+	}
+	else
+	{
+		return 0;
+	}
+
 }
 
 //====================================================================================================
