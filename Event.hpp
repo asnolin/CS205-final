@@ -152,11 +152,17 @@ class EventQueue{
 	}//end no-arg constructor
 
 	//creates a new EventNode of class T and adds it to the pq
-	void make_event(unsigned long int inT, T *inObj1, int inId1, S *inObj2, int inId2,  eventType inType){
-		//create new EventNode
-		EventNode<T, S> node = EventNode<T, S>(inT, inObj1, inId1, inObj2, inId2, inType);
-		//add EventNode to eventQ
-		eventQ.push(node);
+	//will not create a new EventNode if inT is less than currenTime
+	bool make_event(unsigned long int inT, T *inObj1, int inId1, S *inObj2, int inId2,  eventType inType){
+		if(inT < currentTime){
+			return false;
+		}else{
+			//create new EventNode
+			EventNode<T, S> node = EventNode<T, S>(inT, inObj1, inId1, inObj2, inId2, inType);
+			//add EventNode to eventQ
+			eventQ.push(node);
+			return true;
+		}
 	}//end make_event
 
 
@@ -168,6 +174,7 @@ class EventQueue{
 			//save head and pop head from priority_queue
 			EventNode<T, S> head  = eventQ.top();
 			eventQ.pop();
+			currentTime = head.get_time();
 			return head;
 		}
 	}//end pop
@@ -246,6 +253,8 @@ class EventQueue{
 				tempPQ.push(node);
 			}//end for itr
 			swap(tempPQ, eventQ);
+			node = eventQ.top();
+			currentTime = node.get_time();
 		}else{
 			vecEvents.push_back("the event queue is empty\n");
 		}
