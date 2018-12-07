@@ -272,7 +272,7 @@ void display() {
 
       for (int k = 0; k<theStore.Lines[i]->customerLine.size(); ++k)
       {
-        glRasterPos2i(255+(k*85), (250 + newY));
+        glRasterPos2i(265+(k*85), (250 + newY));
         string nmTimes = "(" + std::to_string(theStore.Lines[i]->customerLine[k].getId()) + ")" + std::to_string(theStore.Lines[i]->customerLine[k].getNumItems());
         for (int l = 0; l < lineTxt.length(); ++l)
         {
@@ -359,24 +359,28 @@ void mouse(int button, int state, int x, int y) {
             s2.set_fill(0, 0, 1);
             s3.set_fill(0, 0, 1);
             s4.set_fill(0, 0, 1);
+            theStore.setStrategy(Store::RANDOM);
         }
         if (s2.pointOverlap(x, y)) {
             s2.set_fill(0, 0, 0.2);
             s1.set_fill(0, 0, 1);
             s3.set_fill(0, 0, 1);
             s4.set_fill(0, 0, 1);
+            theStore.setStrategy(Store::NUM_CUSTOMERS);
         }
         if (s3.pointOverlap(x, y)) {
             s3.set_fill(0, 0, 0.2);
             s2.set_fill(0, 0, 1);
             s1.set_fill(0, 0, 1);
             s4.set_fill(0, 0, 1);
+            theStore.setStrategy(Store::NUM_ITEMS);
         }
         if (s4.pointOverlap(x, y)) {
             s4.set_fill(0, 0, 0.2);
             s2.set_fill(0, 0, 1);
             s3.set_fill(0, 0, 1);
             s1.set_fill(0, 0, 1);
+            theStore.setStrategy(Store::WAIT_TIME);
         }
     }
 
@@ -424,7 +428,7 @@ void mouse(int button, int state, int x, int y) {
 
 void timer(int dummy) {
 
-    glutTimerFunc(2000, timer, 0);
+    glutTimerFunc(500, timer, 0);
     glutPostRedisplay();
 
 }

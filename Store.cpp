@@ -214,6 +214,10 @@ void Store::setTime(int t){
 	Time = t;
 }
 
+void Store::setStrategy(QueueStrategy S){
+	Strat = S;
+}
+
 //====================================================================================================
 
 int Store::genCashTime(int numItems){

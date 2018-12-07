@@ -44,13 +44,12 @@ class Store{
 		//seeds customer ids
 		static int arrivalSeed;
 
-		enum QueueStrategy {NUM_ITEMS, NUM_CUSTOMERS, WAIT_TIME, RANDOM};
-
-
 	public:
 
 		Store();
 		~Store();
+
+		enum QueueStrategy {RANDOM, NUM_CUSTOMERS, NUM_ITEMS, WAIT_TIME};
 
 		//Event Queue
 		EventQueue<Customer, CheckoutLine> EventQ;
@@ -80,6 +79,7 @@ class Store{
 		int getTime();
 		void incTime();
 		void setTime(int t);
+		void setStrategy(QueueStrategy S);
 
 		//Customer Functions
 		int genCashTime(int numItems);
