@@ -184,12 +184,20 @@ void display() {
         for (int i = 0; i < stop.length(); ++i) {
             glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, stop[i]);
         }
+
         //set color to black
         glColor3f(0, 0, 1);
         glRasterPos2i(15, 700);
         string ExLaneLabel = "Express Lane Limit: " + to_string(LaneLimit);
         for (int i = 0; i < ExLaneLabel.length(); ++i) {
             glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ExLaneLabel[i]);
+        }
+
+        glColor3f(0, 0, 0);
+        glRasterPos2i(75, 745);
+        string HelpLabel = "<- Click For Help!";
+        for (int i = 0; i < HelpLabel.length(); ++i) {
+            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, HelpLabel[i]);
         }
 
         glColor3f(0, 0, 0);
