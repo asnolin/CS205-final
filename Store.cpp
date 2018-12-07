@@ -9,7 +9,7 @@ unsigned long int Store::Time = 0;
 //no-arg Store constructor
 Store::Store(){
 	Time = 0;
-	Strat = NUM_CUSTOMERS;
+	Strat = RANDOM;
 	NumCheckouts = 0;
 }//end store default constructor
 
