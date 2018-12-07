@@ -20,7 +20,7 @@ int main()
 
   theStore.setTime(E.get_time());
   E = theStore.EventQ.pop();
-  while(theStore.getTime() < 100)
+  while(theStore.getTime() != -1)
   {
     theStore.setTime(E.get_time());
     theStore.handleEvent(E);

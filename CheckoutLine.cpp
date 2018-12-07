@@ -4,6 +4,7 @@
 
 #include "CheckoutLine.h"
 #include <stdlib.h>
+#include<limits>
 
 int CheckoutLine::idSeed = 1;
 CheckoutLine::CheckoutLine(){
@@ -12,7 +13,7 @@ CheckoutLine::CheckoutLine(){
     WaitTime = 0;
     NumCustomers = 0;
     NumItems = 0;
-    ItemLimit = 100;
+    ItemLimit =std::numeric_limits<int>::max();
 };
 
 int CheckoutLine::getID() const{
