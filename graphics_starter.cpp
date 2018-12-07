@@ -266,7 +266,7 @@ void display() {
         {
             int newY =45*i;
 
-            if(theStore.Lines[i]->getItemLimit() != 100)
+            if(theStore.Lines[i]->getItemLimit() != std::numeric_limits<int>::max())
             {
                 if(theStore.Lines[i]->getItemLimit() < 10)
                 {
@@ -418,14 +418,14 @@ void mouse(int button, int state, int x, int y) {
         {
             if(ExpressBoxes[i].pointOverlap(x,y) & i!=0)
             {
-                if(theStore.Lines[i]->getItemLimit() == 100)
+                if(theStore.Lines[i]->getItemLimit() == std::numeric_limits<int>::max())
                 {
                     theStore.Lines[i]->setItemLimit(LaneLimit);
                     ExpressBoxes[i].set_fill((color){0.5,0,0.8});
                 }
                 else
                 {
-                    theStore.Lines[i]->setItemLimit(100);
+                    theStore.Lines[i]->setItemLimit(std::numeric_limits<int>::max());
                     ExpressBoxes[i].set_fill((color){0,0,1});
                 }
             }
