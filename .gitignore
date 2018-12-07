@@ -3,3 +3,9 @@
 *.o
 *.xcodeproj
 *.gch
+
+# files for the writeup
+*.tex
+*.aux
+*.pdf
+*.log
