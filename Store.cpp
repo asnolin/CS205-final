@@ -162,7 +162,7 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 
 	//Create an Event that Corresponds to Soonest of the 3 Times
 	//======================================================================
-	if(StTime <= ChTime  &  StTime <= AbTime) //Customer will Finish Checkout in Current Line
+	if(StTime <= ChTime && StTime <= AbTime) //Customer will Finish Checkout in Current Line
 	{
 		//Update WaitTime of CheckoutLine
 		L->updateWaitTime(C->getCheckoutLength());
@@ -178,7 +178,7 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 		printEvent(FinishTime, C, L, CUSTOMER_CHECKOUT_FINISH);
 	}
 	//======================================================================
-	if(ChTime < StTime  &  ChTime <= AbTime) //Customer will Switch Checkout Lines
+	if(ChTime < StTime && ChTime <= AbTime) //Customer will Switch Checkout Lines
 	{
 		//Add Changes_Line Event
 		EventQ.make_event(ChTime, C, C->getId(), L, L->getID(), CUSTOMER_CHANGES_LINE);
@@ -188,7 +188,7 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 		printEvent(ChTime, C, L, CUSTOMER_CHANGES_LINE);
 	}
 	//======================================================================
-	if(AbTime < StTime  &  AbTime < ChTime) //Customer will Abandon Store
+	if(AbTime < StTime && AbTime < ChTime) //Customer will Abandon Store
 	{
 		//Create Abandons_Line Event
 		EventQ.make_event(AbTime, C, C->getId(), L, L->getID(), CUSTOMER_ABANDONS_LINE);
@@ -260,7 +260,7 @@ CheckoutLine* Store::chooseLine(int Items){
 		case NUM_ITEMS :
 			for(i = 0; i < Lines.size(); i++)
 			{
-				if(Lines[i]->getNumItems()<L->getNumItems() & Items<=Lines[i]->getItemLimit() & Lines[i]->getStatus())
+				if(Lines[i]->getNumItems()<L->getNumItems() && Items<=Lines[i]->getItemLimit() && Lines[i]->getStatus())
 				{
 					L = Lines[i];
 				}
@@ -270,7 +270,7 @@ CheckoutLine* Store::chooseLine(int Items){
 		case NUM_CUSTOMERS :
 			for(i = 0; i < Lines.size(); i++)
 			{
-				if(Lines[i]->getNumCustomers()<L->getNumCustomers() & Items<=Lines[i]->getItemLimit() & Lines[i]->getStatus())
+				if(Lines[i]->getNumCustomers()<L->getNumCustomers() && Items<=Lines[i]->getItemLimit() && Lines[i]->getStatus())
 				{
 					L = Lines[i];
 				}
@@ -280,7 +280,7 @@ CheckoutLine* Store::chooseLine(int Items){
 		case WAIT_TIME :
 			for(i = 0; i < Lines.size(); i++)
 			{
-				if(Lines[i]->getWaitTime()<L->getWaitTime() & Items<=Lines[i]->getItemLimit() & Lines[i]->getStatus())
+				if(Lines[i]->getWaitTime()<L->getWaitTime() && Items<=Lines[i]->getItemLimit() && Lines[i]->getStatus())
 				{
 					L = Lines[i];
 				}
