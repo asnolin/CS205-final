@@ -6,6 +6,7 @@ int main()
 
   Store theStore;
   theStore.setTime(0);
+  theStore.setStrategy(Store::RANDOM);
 
   int i;
   for(i = 0; i < 3; i++)
@@ -20,7 +21,7 @@ int main()
 
   theStore.setTime(E.get_time());
   E = theStore.EventQ.pop();
-  while(theStore.getTime() != -1)
+  while(theStore.getTime() < 20000)
   {
     theStore.setTime(E.get_time());
     theStore.handleEvent(E);
@@ -28,7 +29,30 @@ int main()
   }
   printf("====================================\n");
   printf("\n");
-
+  theStore.setStrategy(Store::NUM_CUSTOMERS);
+  while(theStore.getTime() < 40000){
+	  theStore.setTime(E.get_time());
+	  theStore.handleEvent(E);
+	  E = theStore.EventQ.pop();
+  }
+  
+  printf("====================================\n");
+  printf("\n");
+  theStore.setStrategy(Store::NUM_ITEMS);
+  while(theStore.getTime() < 60000){
+	  theStore.setTime(E.get_time());
+	  theStore.handleEvent(E);
+	  E = theStore.EventQ.pop();
+  }
+  
+  printf("====================================\n");
+  printf("\n");
+  theStore.setStrategy(Store::WAIT_TIME);
+  while(theStore.getTime() < 80000){
+	  theStore.setTime(E.get_time());
+	  theStore.handleEvent(E);
+	  E = theStore.EventQ.pop();
+  }
   /*
   //==============================================
   //TESTING CUSTOMER FINISHES CHECKOUT
