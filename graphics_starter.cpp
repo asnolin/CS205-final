@@ -231,22 +231,34 @@ void display() {
             glRasterPos2i(20, 40);
             string ExLaneLabel2 = "*Use Up and Down Arrow Keys to Change Express Lane Limit*";
             for (int i = 0; i < ExLaneLabel2.length(); ++i) {
-                glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ExLaneLabel2[i]);
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ExLaneLabel2[i]);
             }
             //set color to black
             glColor3f(0, 0, 0);
-            glRasterPos2i(20, 70);
+            glRasterPos2i(20, 65);
             string ExLaneLabel3 = "*Click Blue Boxes Next to Checkout Lines to Toggle Express Lane*";
             for (int i = 0; i < ExLaneLabel3.length(); ++i) {
-                glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ExLaneLabel3[i]);
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ExLaneLabel3[i]);
             }
 
             //set color to black
             glColor3f(0, 0, 0);
-            glRasterPos2i(20, 100);
+            glRasterPos2i(20, 90);
             string ExLaneLabel4 = "*Click Red/Green Boxes Next to Checkout Lines to Open/Close Them*";
             for (int i = 0; i < ExLaneLabel4.length(); ++i) {
-                glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ExLaneLabel4[i]);
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ExLaneLabel4[i]);
+            }
+
+            string ExLaneLabel5 = "Line Joining Strategy: 1 = Random | 2 = Min Customers | 3 = Min Items | 4 = Min Wait Time";
+            glRasterPos2i(20, 115);
+            for (int i = 0; i < ExLaneLabel5.length(); ++i) {
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ExLaneLabel5[i]);
+            }
+
+            string ExLaneLabel6 = "Customer's In Checkout Lines are Formatted: (ID)NumItems";
+            glRasterPos2i(20, 140);
+            for (int i = 0; i < ExLaneLabel6.length(); ++i) {
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ExLaneLabel6[i]);
             }
         }
 
