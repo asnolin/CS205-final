@@ -162,7 +162,7 @@ void display()
             glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, strWaitTime[i]);
         }
 
-        string strCheckoutRate = "Checkouts Per Hour: " + dubToString(theStore.getCheckoutRate());
+        string strCheckoutRate = "Checkouts Per 60 Ticks: " + dubToString(theStore.getCheckoutRate());
         glRasterPos2i(550, 90);
         for (int i = 0; i < strCheckoutRate.length(); ++i)
         {
