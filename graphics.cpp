@@ -243,14 +243,14 @@ void display()
     //=======================================================
 
     glColor3f(0, 0, 0);
+    //Print Express Lane and Open/Closed Boxes for Each Checkout Line
+    for(int i = 0; i < numLines; i++)
+    {
+        buttonsExpress[i].draw();
+        buttonsStatus[i].draw();
+    }
     for (int i = 0; i < theStore.Lines.size(); ++i)
     {
-        //Print Express Lane and Open/Closed Boxes for Each Checkout Line
-        for(int i = 0; i < numLines; i++)
-        {
-            buttonsExpress[i].draw();
-            buttonsStatus[i].draw();
-        }
 
         int newY = 45*i;
         glColor3f(0, 0, 0);
