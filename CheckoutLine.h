@@ -1,5 +1,5 @@
 //
-// Created by Ylee on 11/9/2018.
+// Written by Yile Li
 //
 
 #ifndef CS205_FINAL_CHECKOUTLINE_H
@@ -12,51 +12,42 @@
 using namespace std;
 
 
-class CheckoutLine {
-private:
-    //fields
+class CheckoutLine
+{
+  private:
 
-    int ID;
-    int NumCustomers;
-    int NumItems;
-    int WaitTime;
-    int ItemLimit;
+      int ID;
+      int NumCustomers;
+      int NumItems;
+      int WaitTime;
+      int ItemLimit;
 
-    bool Open = true;;
+      bool Open = true;;
 
-    static int idSeed;
-public:
-    CheckoutLine();
-    //getter
+      static int idSeed;
 
-    vector <Customer> customerLine;
+  public:
 
-    int getID() const;
-    int getNumCustomers() const;
-    int getNumItems() const;
-    int getWaitTime() const;
-    int getItemLimit() const;
+      CheckoutLine();
 
-    bool getStatus() const;
-    void togStatus();
+      vector <Customer> customerLine;
 
-    //setter
-    //void setID(int ID);
-    //void setNumCustomers(int NumCustomers);
-    //void setNumItems(int NumItems);
-    //void setWaitTime(int WaitTime);
+      int getID() const;
+      int getNumCustomers() const;
+      int getNumItems() const;
+      int getWaitTime() const;
+      int getItemLimit() const;
 
-    void setItemLimit(int n);
+      bool getStatus() const;
+      void togStatus();
 
-    void incNumCustomers(Customer in);
-    void decNumCustomers(Customer out);
-    void updateNumItems(int n);
-    void updateWaitTime(int n);
-    void update();
+      void setItemLimit(int n);
 
-
-
-
+      void incNumCustomers(Customer in);
+      void decNumCustomers(Customer out);
+      void updateNumItems(int n);
+      void updateWaitTime(int n);
+      void update();
 };
 
 
