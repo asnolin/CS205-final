@@ -1,10 +1,11 @@
-#include "Graphics.h"
+#include "graphics.h"
 #include "Store.hpp"
 #include "shape.h"
 
 #include <vector>
 #include <iostream>
 #include <string.h>
+#include<limits>
 
 using namespace std;
 
@@ -54,6 +55,10 @@ bool Run = false;
 bool ShowHelp = false;
 
 int Show = 0;
+
+//vectors for printing the event queue
+vector<string> vecEvents;
+vector<string> vecEventsOld;
 
 void myGlutIdle()
 {
@@ -207,8 +212,13 @@ void display()
     {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, strEventQ[i]);
     }
+    if(Run){
+        vecEvents = theStore.EventQ.to_str(); //gets the eventQ
+	vecEventsOld = vecEvents;
+    }else{
+	vecEvents = vecEventsOld;
+    }
 
-    vector<string> vecEvents = theStore.EventQ.to_str();
     for(int i = 0; i < vecEvents.size(); i++)
     {
         glRasterPos2i(1025, 200+(20*i));
