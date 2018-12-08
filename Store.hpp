@@ -1,34 +1,13 @@
-/*
- * Store.hpp
- * The Store class contains:
- * 	event queue
- * 	event queue node struct
- *	customer struct
- *	checkout lines that hold customers
- *	a vector to hold customers while they are shopping
- * 	cashiers
- * 	cashiers could be a mapping of a cashier id values to a list addr or idex of a vector<list<Customer>>
- *	maybe map or unordered map.
- *
- * The Store class should communicate with GUI contorller
- *
- * TODO
- * cashiers
- * GUI
- * n items or fewer lines
- * customer movement
- * add/remove cashiers
- */
+//
+// Written by Andrew Nolin and William Slocum
+//
 
-//lib includes
 #include<list>
 #include<queue>
 #include<vector>
 #include<cmath>
 #include<unordered_map>
 #include<cmath>
-//class includes
-//defs
 
 #include "Customer.hpp"
 #include "CheckoutLine.h"
@@ -36,12 +15,12 @@
 
 using namespace std;
 
-class Store{
+class Store
+{
 	private:
-		//fields
+
 		static unsigned long int Time;
 
-		//seeds customer ids
 		static int arrivalSeed;
 
 	public:

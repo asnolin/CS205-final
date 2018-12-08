@@ -1,3 +1,7 @@
+//
+// Written by William Slocum
+//
+
 #include "Store.hpp"
 #include <iostream>
 

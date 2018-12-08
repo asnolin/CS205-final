@@ -1,6 +1,10 @@
-#include "graphics.h"
+//
+// Written by Andrew Bord, Andrew Nolin, Yile Li, and William Slocum
+//
+
+#include "Graphics.h"
 #include "Store.hpp"
-#include "shape.h"
+#include "Shape.h"
 
 #include <vector>
 #include <iostream>
@@ -20,26 +24,26 @@ GLdouble Height;
 int wd;
 int numLines = 10;
 
-//Background Shapes
+//Background Shapes (Yile Li)
 Rectangles Background1(980,150,(color){1,1,1},(point){10,10});
 Rectangles Background2(270,150,(color){1,1,1},(point){1000,10});
 Rectangles Background3(980,600,(color){1,1,1},(point){10,170});
 Rectangles Background4(270,600,(color){1,1,1},(point){1000,170});
 
-//Start and Stop Buttons
+//Start and Stop Buttons (William Slocum)
 Rectangles buttonStart(70,50,(color){0,200,0},(point){400,700});
 Rectangles buttonStop(70,50,(color){1,0,0},(point){500,700});
 
-//Line Joining Strategy Buttons
+//Line Joining Strategy Buttons (Yile Li)
 Rectangles buttonStrat1(70,50,(color){0,0,0.2},(point){600,700});
 Rectangles buttonStrat2(70,50,(color){0,0,1},(point){700,700});
 Rectangles buttonStrat3(70,50,(color){0,0,1},(point){800,700});
 Rectangles buttonStrat4(70,50,(color){0,0,1},(point){900,700});
 
-//Help Button
+//Help Button (William Slocum)
 Rectangles buttonHelp(40,40,(color){0.9,0.2,0},(point){20,720});
 
-//Buttons Next to Checkout Lines
+//Buttons Next to Checkout Lines (William Slocum)
 vector<Rectangles> buttonsExpress;
 vector<Rectangles> buttonsStatus;
 
@@ -83,21 +87,21 @@ void init()
         theStore.addCheckoutLine(L);
     }
 
-    //Create Express Lane Buttons Next to Each Checkout Line
+    //Create Express Lane Buttons Next to Each Checkout Line (William Slocum)
     for(int i = 0; i < numLines; i++)
     {
         Rectangles r(20,20,(color){0,0,1},(point){15,(230+(45*i))});
         buttonsExpress.push_back(r);
     }
 
-    //Create Open/Closed Button Next to Each Checkout Line
+    //Create Open/Closed Button Next to Each Checkout Line (William Slocum)
     for(int i = 0; i < numLines; i++)
     {
         Rectangles r(20,20,(color){0,1,0},(point){40,(230+(45*i))});
         buttonsStatus.push_back(r);
     }
 
-    //Create First Event to Kick Off Simulation
+    //Create First Event to Kick Off Simulation (William Slocum)
     theStore.EventQ.make_event(0, NULL, 0 , NULL,0, CUSTOMER_ARRIVES);
 }
 
@@ -114,7 +118,7 @@ void initGL()
 //Handler for Window-Repaint Event, Call When the Window First Appears and Whenever its Re-Painted
 void display()
 {
-    // Lots of GLUT Neccessities
+    // GLUT Neccessities
     glViewport(0, 0, Width, Height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -131,7 +135,7 @@ void display()
 
     //=======================================================
 
-    //Draw Store Statistics
+    //Draw Store Statistics (William Slocum)
     if(!ShowHelp)
     {
         //Set Color to Black
@@ -165,7 +169,7 @@ void display()
             glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, strCheckoutRate[i]);
         }
     }
-    //Draw Help Window
+    //Draw Help Window (William Slocum)
     else
     {
         //Set Color to Black
@@ -215,11 +219,16 @@ void display()
     {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, strEventQ[i]);
     }
-    if(Run){
-        vecEvents = theStore.EventQ.to_str(); //gets the eventQ
-	vecEventsOld = vecEvents;
-    }else{
-	vecEvents = vecEventsOld;
+
+    //Prevents Weird Event Queue Printing When Simulation is Paused (Andrew Nolin)
+    if(Run)
+    {
+      vecEvents = theStore.EventQ.to_str();
+	    vecEventsOld = vecEvents;
+    }
+    else
+    {
+	     vecEvents = vecEventsOld;
     }
 
     for(int i = 0; i < vecEvents.size(); i++)
@@ -255,7 +264,7 @@ void display()
         int newY = 45*i;
         glColor3f(0, 0, 0);
 
-        //Print Express Lane Limit if Checkout Line is Express
+        //Print Express Lane Limit if Checkout Line is Express (William Slocum)
         if(theStore.Lines[i]->getItemLimit() != std::numeric_limits<int>::max())
         {
             if(theStore.Lines[i]->getItemLimit() < 10)
@@ -274,7 +283,7 @@ void display()
             }
         }
 
-        //Print Name of Each Checkout Line
+        //Print Name of Each Checkout Line (William Slocum)
         string strLine = "Checkout Line #" + intToString(theStore.Lines[i]->getID()) + ": ";
         glRasterPos2i(65, (250 + newY));
         for (int j = 0; j < strLine.length(); ++j)
@@ -282,7 +291,7 @@ void display()
             glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, strLine[j]);
         }
 
-        //Print Customers in Each Checkout Line
+        //Print Customers in Each Checkout Line (William Slocum)
         for (int k = 0; k < theStore.Lines[i]->customerLine.size(); ++k)
         {
             string strCust = "(" + intToString(theStore.Lines[i]->customerLine[k].getID()) + ")" + intToString(theStore.Lines[i]->customerLine[k].getNumItems());
@@ -313,7 +322,7 @@ void display()
     buttonStrat3.draw();
     buttonStrat4.draw();
 
-    //Set Color to White
+    //Set Color to White (Yile Li)
     glColor3f(1, 1, 1);
 
     glRasterPos2i(630, 730);
@@ -433,6 +442,7 @@ void cursor(int x, int y)
 // Button is GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON, State is GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y)
 {
+    //Button Functionalities Utilize pointOverlap From Shape.cpp
     if(button==GLUT_LEFT_BUTTON)
     {
         if (buttonStart.pointOverlap(x, y))
@@ -520,6 +530,7 @@ void mouse(int button, int state, int x, int y)
             }
         }
     }
+
     glutPostRedisplay();
 }
 //================================================================================
@@ -529,7 +540,7 @@ void timer(int dummy)
     glutPostRedisplay();
 }
 //================================================================================
-// Main Function: GLUT Runs as a Console Application Starting at Main()
+// Main Function: GLUT Runs as a Console Application Starting at Main() (Yile Li)
 int main(int argc, char** argv)
 {
     init();

@@ -1,5 +1,5 @@
 //
-// Written by Yile Li
+// Written by Andrew Nolin and William Slocum
 //
 
 #ifndef CS205_FINAL_CHECKOUTLINE_H

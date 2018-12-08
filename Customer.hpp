@@ -1,5 +1,5 @@
 //
-// Written by William Slocum and Andrew Borg
+// Written by Andrew Borg
 //
 
 #ifndef CS205_FINAL_CUSTOMER_H
