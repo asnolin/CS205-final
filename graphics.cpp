@@ -108,6 +108,9 @@ void initGL()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
+//================================================================================
+//================================================================================
+
 //Handler for Window-Repaint Event, Call When the Window First Appears and Whenever its Re-Painted
 void display()
 {
@@ -387,6 +390,7 @@ void display()
 }
 
 //================================================================================
+//================================================================================
 
 // http://www.theasciicode.com.ar/ascii-control-characters/escape-ascii-code-27.html
 void kbd(unsigned char key, int x, int y)
@@ -559,7 +563,7 @@ int main(int argc, char** argv)
 
     //Handles Timer
     glutTimerFunc(0, timer, 0);
-    
+
     glutMainLoop();
     return 0;
 }

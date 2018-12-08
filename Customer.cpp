@@ -1,52 +1,69 @@
+//
+// Written by William Slocum and Andrew Borg
+//
+
 #include "Customer.hpp"
+
 #include <stdlib.h>
 #include <math.h>
 
-int Customer::getId() const{
+int Customer::getId() const
+{
   return id;
 }
 
-int Customer::getNumItems() const{
+int Customer::getNumItems() const
+{
   return numItems;
 }
 
-int Customer::getImpFactor() const{
+int Customer::getImpFactor() const
+{
   return impFactor;
 }
 
-int Customer::getOppFactor() const{
+int Customer::getOppFactor() const
+{
   return oppFactor;
 }
 
-int Customer::getInStoreTime() const{
+int Customer::getInStoreTime() const
+{
   return inStoreTime;
 }
 
-int Customer::getInLineTime() const{
+int Customer::getInLineTime() const
+{
   return inLineTime;
 }
 
-int Customer::getAbandonTime() const{
+int Customer::getAbandonTime() const
+{
   return abandonTime;
 }
 
-void Customer::setInLineTime(int t){
+void Customer::setInLineTime(int t)
+{
   inLineTime = t;
 }
 
-void Customer::setAbandonTime(int t) {
+void Customer::setAbandonTime(int t)
+{
   abandonTime = impFactor + t;
 }
 
-int Customer::getCheckoutLength() const {
+int Customer::getCheckoutLength() const
+{
   return checkoutLength;
 }
 
-void Customer::setCheckoutLength(int t) {
+void Customer::setCheckoutLength(int t)
+{
   checkoutLength = t;
 }
 
-double Customer::genRandExp(double beta) const{
+double Customer::genRandExp(double beta) const
+{
   double u, x;
   u = drand48();
   x = -beta * log(1.0 - u); // this is the natural log
@@ -55,7 +72,8 @@ double Customer::genRandExp(double beta) const{
 
 int Customer::idSeed = 1;
 
-Customer::Customer(int arriveTime){
+Customer::Customer(int arriveTime)
+{
   id = idSeed;
   idSeed++;
 

@@ -11,7 +11,6 @@
 
 using namespace std;
 
-
 class CheckoutLine
 {
   private:
@@ -49,6 +48,5 @@ class CheckoutLine
       void updateWaitTime(int n);
       void update();
 };
-
 
 #endif //CS205_FINAL_CHECKOUTLINE_H
