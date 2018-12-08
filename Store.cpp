@@ -2,21 +2,21 @@
 #include <iostream>
 
 //====================================================================================================
+//Mean Arrival Interval for Customers
+int Store::arrivalSeed = 1;
 
-int Store::arrivalSeed = 1; //10
 unsigned long int Store::Time = 0;
 
-//no-arg Store constructor
-Store::Store(){
+Store::Store()
+{
 	Time = 0;
 	Strat = RANDOM;
 	NumCheckouts = 0;
-}//end store default constructor
+}
 
-//Store destructor
-Store::~Store(){
-
-}//end store default destructor
+Store::~Store()
+{
+}
 
 //====================================================================================================
 
@@ -28,13 +28,11 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 
 	//Print the Status of the CheckoutLines and Customers
 	printLines();
-	printf("Avg Wait Time: %-4.2f\n", getAvgWaitTime());
-	printf("Checkout Rate: %-4.2f\n", getCheckoutRate());
 	printCusts();
 
 	//Print the Current Event being Processed
 	printf("PROCESSING EVENT\n");
-	printEvent(E);
+	printEvent(E.get_time(), E.get_obj1(), E.get_obj2(), E.get_type());
 
 	//==================================================
 	if(E.get_type() == CUSTOMER_ARRIVES)
@@ -98,8 +96,6 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		L->updateNumItems(-1 * C->getNumItems());
 
 		WaitTimes.push_back(Time - C->getInLineTime() - C->getCheckoutLength());
-		printf("Customer Wait Time %lu\n",Time - C->getInLineTime() - C->getCheckoutLength());
-		printf("Wait Time Array Length: %lu\n", WaitTimes.size());
 
 		NumCheckouts = NumCheckouts + 1;
 
@@ -141,8 +137,6 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		L->updateNumItems(-1 * C->getNumItems());
 
 		WaitTimes.push_back(Time - C->getInLineTime());
-		printf("Customer Wait Time %lu\n",Time - C->getInLineTime());
-		printf("Wait Time Array Length: %lu\n", WaitTimes.size());
 
 		//Remove Customer from Global Shopping Vector
 		removeCustomer(C->getID());
@@ -153,6 +147,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 	//==================================================
 }
 
+//Decide Whether a Customer Will Checkout, Change Lines, or Abandon Line
 void Store::makeDecision(Customer *C, CheckoutLine *L)
 {
 	//Customer Has 3 Options: Stay In Line, Change Lines, Abandon Store
@@ -202,30 +197,36 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 
 //====================================================================================================
 
-int Store::getTime(){
+int Store::getTime()
+{
 	return Time;
 }
 
-void Store::incTime(){
+void Store::incTime()
+{
 	Time = Time+1;
 }
 
-void Store::setTime(int t){
+void Store::setTime(int t)
+{
 	Time = t;
 }
 
-void Store::setStrategy(QueueStrategy S){
+void Store::setStrategy(QueueStrategy S)
+{
 	Strat = S;
 }
 
 //====================================================================================================
 
-int Store::genCashTime(int numItems){
+int Store::genCashTime(int numItems)
+{
 	int r = floor((0.20*numItems) + 1);
 	return(r);
 }
 
-int Store::genShopTime(int numItems){
+int Store::genShopTime(int numItems)
+{
 	int r = floor((0.80*numItems) + 2);
 	return(r);
 }
@@ -245,12 +246,14 @@ void Store::removeCustomer(int ID)
 
 //====================================================================================================
 
-void Store::addCheckoutLine(CheckoutLine *L){
+void Store::addCheckoutLine(CheckoutLine *L)
+{
 	Lines.push_back(L);
 }
 
-CheckoutLine* Store::chooseLine(int Items){
-
+//Based on Queueing Strategy, Choose the Best Line for the Customer to Join
+CheckoutLine* Store::chooseLine(int Items)
+{
 	CheckoutLine *L = Lines.front();
 	int i;
 
@@ -300,7 +303,8 @@ CheckoutLine* Store::chooseLine(int Items){
 
 //====================================================================================================
 
-double Store::getAvgWaitTime(){
+double Store::getAvgWaitTime()
+{
 	if(WaitTimes.size()==0)
 	{
 		return 0;
@@ -328,22 +332,9 @@ double Store::getCheckoutRate()
 	{
 		return 0;
 	}
-
 }
 
 //====================================================================================================
-
-void Store::printQ()
-{
-	EventNode<Customer, CheckoutLine> E;
-	while(!EventQ.is_empty())
-	{
-		//===================================
-		E = EventQ.pop();
-		printEvent(E);
-	}
-}
-
 void Store::printCusts()
 {
 	int i;
@@ -402,53 +393,17 @@ void Store::printEvent(unsigned long Time, Customer *C, CheckoutLine *L, eventTy
 	printf("\n\n");
 }
 
-void Store::printEvent(EventNode<Customer, CheckoutLine> E)
-{
-	//===================================
-	printf("< %3lu  ", E.get_time());
-	//===================================
-	if(E.get_obj1()==NULL){
-		printf("NULL  ");
-	}
-	else{
-		printf("C%-3d  ",E.get_obj1()->getID());
-	}
-	//===================================
-	if(E.get_obj2()==NULL){
-		printf("NULL  ");
-	}
-	else{
-		printf("L%-3d  ",E.get_obj2()->getID());
-	}
-	//===================================
-	switch(E.get_type())
-	{
-		case 0: printf("CUSTOMER_ARRIVES >");
-			break;
-		case 1: printf("CUSTOMER_CHECKOUT_READY >");
-			break;
-		case 2: printf("CUSTOMER_CHECKOUT_FINISH >");
-			break;
-		case 3: printf("CUSTOMER_CHANGES_LINE >");
-			break;
-		case 4: printf("CUSTOMER_ABANDONS_LINE >");
-			break;
-		case 5: printf("VOID_EVENT >");
-			break;
-	}
-	//===================================
-	printf("\n\n");
-}
-
 //====================================================================================================
-
-double Store::genRandExp(double beta) const{
+//Generate Number from Exponential Distrubtion with Mean = Beta
+double Store::genRandExp(double beta) const
+{
   double u, x;
   u = drand48();
-  x = -beta * log(1.0 - u); // this is the natural log
+  x = -beta * log(1.0 - u);
   return(x);
 }
 
+//Generate Number from Uniform Distribution Between Low and High
 double Store::genRandUni(int low, int high) const
 {
 	double r1, r2;

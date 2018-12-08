@@ -95,10 +95,8 @@ class Store{
 		double getCheckoutRate();
 
 		//Printing Functions
-		void printQ();
 		void printCusts();
 		void printLines();
-		void printEvent(EventNode<Customer, CheckoutLine> E);
 		void printEvent(unsigned long Time, Customer *C, CheckoutLine *L, eventType eT);
 
 		//Random Number Generation
