@@ -532,15 +532,34 @@ int main(int argc, char** argv)
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA);
     glutInitWindowSize((int)Width, (int)Height);
+
+    // Position the Window's Initial Top-Left Corner
     glutInitWindowPosition(100, 200);
+
+    // Create the Window and Store the Handle to It
     wd = glutCreateWindow("Super Market Simulation");
+
+    // Register Callback Handler for Window Re-Paint Event
     glutDisplayFunc(display);
+
+    // Our Own OpenGL Initialization
     initGL();
+
+    // Register Keyboard Press Event Processing Function
     glutKeyboardFunc(kbd);
+
+    // Register Special Event: Function Keys, Arrows, etc.
     glutSpecialFunc(kbdS);
+
+    // Handles Mouse Movement
     glutPassiveMotionFunc(cursor);
+
+    //Handles Mouse Click
     glutMouseFunc(mouse);
+
+    //Handles Timer
     glutTimerFunc(0, timer, 0);
+    
     glutMainLoop();
     return 0;
 }
