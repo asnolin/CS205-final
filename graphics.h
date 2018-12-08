@@ -1,5 +1,5 @@
 //
-// Created by Emrazy Dark on 2018-11-30.
+// Written by Yile Li
 //
 #ifndef graphics_h
 #define graphics_h
@@ -17,31 +17,30 @@
 #include <GL/glut.h>
 #endif
 
-// Program initialization NOT OpenGL/GLUT dependent,
-// as we haven't created a GLUT window yet
+// Program Initialization NOT OpenGL/GLUT Dependent, As We Haven't Created a GLUT Window Yet
 void init();
 
 // Initialize OpenGL Graphics
 void InitGL();
 
-// Callback functions for GLUT
+// Callback Functions for GLUT
 
-// Draw the window - this is where all the GL actions are
+// Draw the Window - This is Where All the GL Actions Are
 void display();
 
-// Trap and process alphanumeric keyboard events
+// Trap and Process Alphanumeric Keyboard Events
 void kbd(unsigned char key, int x, int y);
 
-// Trap and process special keyboard events
+// Trap and Process Special Keyboard Events
 void kbdS(int key, int x, int y);
 
-// Handle "mouse cursor moved" events
+// Handle "Mouse Cursor Moved" Events
 void cursor(int x, int y);
 
-// Calls itself after a specified time
+// Calls Itself After a Specified Time
 void timer(int dummy);
 
-// Handle mouse button pressed and released events
+// Handle Mouse Button Pressed and Released Events
 void mouse(int button, int state, int x, int y);
 
 #endif /* graphics_h */
