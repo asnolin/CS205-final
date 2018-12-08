@@ -1,5 +1,5 @@
 //
-// Created by Ragdoll on 2017/12/7.
+// Written by Ragdoll (Contributed by Yile Li)
 //
 
 #include <cmath>

@@ -1,5 +1,5 @@
 //
-// Written by Andrew Bord, Andrew Nolin, Yile Li, and William Slocum
+// Written by Andrew Borg, Yile Li, Andrew Nolin, and William Slocum
 //
 
 #include "Graphics.h"
@@ -105,7 +105,7 @@ void init()
     theStore.EventQ.make_event(0, NULL, 0 , NULL,0, CUSTOMER_ARRIVES);
 }
 
-//Initialize OpenGL Graphics
+//Initialize OpenGL Graphics (Yile Li)
 void initGL()
 {
     // Set Background Color (Black and Opaque)
@@ -252,7 +252,7 @@ void display()
     //=======================================================
 
     glColor3f(0, 0, 0);
-    //Print Express Lane and Open/Closed Boxes for Each Checkout Line
+    //Print Express Lane and Open/Closed Boxes for Each Checkout Line (William Slocum)
     for(int i = 0; i < numLines; i++)
     {
         buttonsExpress[i].draw();
@@ -310,6 +310,7 @@ void display()
 
     glColor3f(0, 0, 0);
 
+    //(Yile Li)
     string strStrats = "Line Joining Strategies";
     glRasterPos2i(675, 685);
     for (int i = 0; i < strStrats.length(); ++i)
@@ -338,6 +339,7 @@ void display()
     glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, char('4'));
 
     //=======================================================
+    //(William Slocum)
     buttonStart.draw();
     buttonStop.draw();
 
@@ -359,7 +361,7 @@ void display()
 
     //=======================================================
 
-    //Set Color to Blue
+    //Set Color to Blue //(William Slocum)
     glColor3f(0, 0, 1);
 
     glRasterPos2i(15, 700);
@@ -401,7 +403,7 @@ void display()
 //================================================================================
 //================================================================================
 
-// http://www.theasciicode.com.ar/ascii-control-characters/escape-ascii-code-27.html
+// http://www.theasciicode.com.ar/ascii-control-characters/escape-ascii-code-27.html (Yile Li)
 void kbd(unsigned char key, int x, int y)
 {
     // escape
@@ -414,6 +416,7 @@ void kbd(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 //================================================================================
+//(Yile Li)
 void kbdS(int key, int x, int y)
 {
     switch(key)
@@ -439,7 +442,7 @@ void cursor(int x, int y)
 {
 }
 //================================================================================
-// Button is GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON, State is GLUT_UP or GLUT_DOWN
+// Button is GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON, State is GLUT_UP or GLUT_DOWN (Yile Li)
 void mouse(int button, int state, int x, int y)
 {
     //Button Functionalities Utilize pointOverlap From Shape.cpp
@@ -498,6 +501,7 @@ void mouse(int button, int state, int x, int y)
         else ShowHelp=true;
     }
 
+    //(William Slocum)
     if(button==GLUT_LEFT_BUTTON & state==GLUT_DOWN)
     {
         for(int i=0; i<numLines; i++)
@@ -534,6 +538,7 @@ void mouse(int button, int state, int x, int y)
     glutPostRedisplay();
 }
 //================================================================================
+//(Yile Li)
 void timer(int dummy)
 {
     glutTimerFunc(500, timer, 0);
@@ -580,6 +585,7 @@ int main(int argc, char** argv)
 }
 //================================================================================
 
+//(Yile Li)
 string intToString(int i)
 {
     char t[256];
