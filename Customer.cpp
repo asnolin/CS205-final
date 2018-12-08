@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-int Customer::getId() const
+int Customer::getID() const
 {
   return id;
 }

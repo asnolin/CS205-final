@@ -285,7 +285,7 @@ void display()
         //Print Customers in Each Checkout Line
         for (int k = 0; k < theStore.Lines[i]->customerLine.size(); ++k)
         {
-            string strCust = "(" + intToString(theStore.Lines[i]->customerLine[k].getId()) + ")" + intToString(theStore.Lines[i]->customerLine[k].getNumItems());
+            string strCust = "(" + intToString(theStore.Lines[i]->customerLine[k].getID()) + ")" + intToString(theStore.Lines[i]->customerLine[k].getNumItems());
             glRasterPos2i(265+(k*85), (250+newY));
             for (int l = 0; l < strCust.length(); ++l)
             {

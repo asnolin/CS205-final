@@ -34,7 +34,7 @@ class Customer
     double genRandExp(double beta) const;
 
   public:
-    int getId() const;
+    int getID() const;
     int getNumItems() const;
 
     int getImpFactor() const;

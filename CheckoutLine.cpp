@@ -62,7 +62,7 @@ void CheckoutLine::decNumCustomers(Customer out)
     NumCustomers--;
     for (int i = 0; i<customerLine.size(); i++)
     {
-        if (customerLine[i].getId() == out.getId())
+        if (customerLine[i].getID() == out.getID())
         {
             customerLine.erase(customerLine.begin()+ i);
         }

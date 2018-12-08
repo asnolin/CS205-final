@@ -49,7 +49,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		aCustomer->setCheckoutLength(genCashTime(aCustomer->getNumItems()));
 
 		//Add Checkout_Ready Event for New Customer
-		EventQ.make_event(Time+shopTime, aCustomer, aCustomer->getId(), NULL, 0, CUSTOMER_CHECKOUT_READY);
+		EventQ.make_event(Time+shopTime, aCustomer, aCustomer->getID(), NULL, 0, CUSTOMER_CHECKOUT_READY);
 
 		//Create a Checkout_Ready Event and Print It
 		printf("CREATED EVENT\n");
@@ -104,7 +104,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		NumCheckouts = NumCheckouts + 1;
 
 		//Remove Customer from Global Shopping Vector
-		removeCustomer(C->getId());
+		removeCustomer(C->getID());
 		delete(C);
 
 		//Free Memory Allocated to Customer ?
@@ -145,7 +145,7 @@ void Store::handleEvent(EventNode<Customer,CheckoutLine> E)
 		printf("Wait Time Array Length: %lu\n", WaitTimes.size());
 
 		//Remove Customer from Global Shopping Vector
-		removeCustomer(C->getId());
+		removeCustomer(C->getID());
 		delete(C);
 
 		//Free Memory Allocated to Customer ?
@@ -171,7 +171,7 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 		//Time Waiting in Line + Time Scanning Items + Current Time
 		int FinishTime = StTime + C->getCheckoutLength();
 		//Add Checkout_Finish Event
-		EventQ.make_event(FinishTime, C, C->getId(), L, L->getID(), CUSTOMER_CHECKOUT_FINISH);
+		EventQ.make_event(FinishTime, C, C->getID(), L, L->getID(), CUSTOMER_CHECKOUT_FINISH);
 
 		//Print Event
 		printf("CREATED EVENT\n");
@@ -181,7 +181,7 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 	if(ChTime < StTime && ChTime <= AbTime) //Customer will Switch Checkout Lines
 	{
 		//Add Changes_Line Event
-		EventQ.make_event(ChTime, C, C->getId(), L, L->getID(), CUSTOMER_CHANGES_LINE);
+		EventQ.make_event(ChTime, C, C->getID(), L, L->getID(), CUSTOMER_CHANGES_LINE);
 
 		//Print Event
 		printf("CREATED EVENT\n");
@@ -191,7 +191,7 @@ void Store::makeDecision(Customer *C, CheckoutLine *L)
 	if(AbTime < StTime && AbTime < ChTime) //Customer will Abandon Store
 	{
 		//Create Abandons_Line Event
-		EventQ.make_event(AbTime, C, C->getId(), L, L->getID(), CUSTOMER_ABANDONS_LINE);
+		EventQ.make_event(AbTime, C, C->getID(), L, L->getID(), CUSTOMER_ABANDONS_LINE);
 
 		//Print Event
 		printf("CREATED EVENT\n");
@@ -235,7 +235,7 @@ void Store::removeCustomer(int ID)
 	int i;
 	for(i = 0; i < Shopping.size(); i++)
 	{
-		if(Shopping[i].getId() == ID)
+		if(Shopping[i].getID() == ID)
 		{
 			Shopping.erase(Shopping.begin()+i);
 			break;
@@ -350,7 +350,7 @@ void Store::printCusts()
 	for(i = 0; i < Shopping.size(); i++)
 	{
 		printf("(Cust %2d)     Item: %3d     OppF: %3d     ImpF: %3d\n",
-		Shopping[i].getId(),Shopping[i].getNumItems(),Shopping[i].getOppFactor(),Shopping[i].getImpFactor());
+		Shopping[i].getID(),Shopping[i].getNumItems(),Shopping[i].getOppFactor(),Shopping[i].getImpFactor());
 	}
 }
 
@@ -373,7 +373,7 @@ void Store::printEvent(unsigned long Time, Customer *C, CheckoutLine *L, eventTy
 		printf("NULL  ");
 	}
 	else{
-		printf("C%-3d  ",C->getId());
+		printf("C%-3d  ",C->getID());
 	}
 	//===================================
 	if(L==NULL){
@@ -411,7 +411,7 @@ void Store::printEvent(EventNode<Customer, CheckoutLine> E)
 		printf("NULL  ");
 	}
 	else{
-		printf("C%-3d  ",E.get_obj1()->getId());
+		printf("C%-3d  ",E.get_obj1()->getID());
 	}
 	//===================================
 	if(E.get_obj2()==NULL){
